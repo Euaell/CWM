@@ -23,8 +23,11 @@ app.use(express.json())
 app.use(cookieParser())
 
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"))
-app.use(morgan(":remote-addr - :remote-user [:date[clf]] \":method :url HTTP/:http-version\" :status :res[content-length] \":referrer\" \":user-agent\"",
-	{ stream: accessLogStream }))
+
+if (process.env.NODE_ENV !== "production") {
+	app.use(morgan(":remote-addr - :remote-user [:date[clf]] \":method :url HTTP/:http-version\" :status :res[content-length] \":referrer\" \":user-agent\"",
+		{stream: accessLogStream}))
+}
 
 app.use("/api/v2/users", Routes.UserRoute)
 app.use("/api/v2/devices", Routes.DeviceRoute)

@@ -11,6 +11,9 @@ import Home from "./pages/Home.tsx";
 import Authenticate from "./helper/Authenticate.tsx";
 import Bills from "./pages/Bills.tsx";
 import Setting from "./pages/Setting.tsx";
+import ShowDevices, {ChartView, TableView} from "./pages/devices/ShowDevices.tsx";
+import AddDevice from "./pages/devices/AddDevice.tsx";
+import React from "react";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -25,6 +28,12 @@ const router = createBrowserRouter(
 					<Route path="bills" element={<Bills />} />
 					<Route path="setting" element={<Setting />} />
 
+					{/*	Devices */}
+					<Route path="show-devices" element={<ShowDevices />}>
+						<Route index element={<TableView /> } />
+						<Route path="chart-view" element={<ChartView />} />
+					</Route>
+					<Route path="add-device" element={<AddDevice />} />
 
 				</Route>
 

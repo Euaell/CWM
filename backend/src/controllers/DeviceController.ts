@@ -3,26 +3,35 @@ import DeviceModel, { IDevice, deviceStateEnum } from "../models/DeviceModel"
 import {Schema} from "mongoose";
 
 export default class DeviceController {
-	static async getAll(req: Request, res: Response, next: NextFunction) {
+	static async getAll(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
-			const devices: IDevice[] = await DeviceModel.find({})
-			res.status(200).json({ devices })
+			const { isActivated } = req.query
+
+			const query = { isActivated: true }
+			if (isActivated !== undefined) {
+				if (isActivated === "false")
+					query['isActivated'] = false
+			}
+
+			const devices: IDevice[] = await DeviceModel.find(query)
+			return res.status(200).json({ devices })
 		} catch (error) {
 			next(error)
 		}
 	}
 
-	static async create(req: Request, res: Response, next: NextFunction) {
+	static async create(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
-			const { Name, Position } = req.body
-			const device: IDevice = await DeviceModel.create({ Name, Position })
-			res.status(201).json({ device })
+			const { Label, City, Address, user } = req.body
+			const device: IDevice = await DeviceModel.create({ Label, City, Address, Admin: user._id })
+
+			return res.status(201).json({ device })
 		} catch (error) {
 			next(error)
 		}
 	}
 
-	static async read(req: Request, res: Response, next: NextFunction) {
+	static async read(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
 			const { id } = req.params
 			const { flow } = req.body
@@ -46,10 +55,11 @@ export default class DeviceController {
 		}
 	}
 
-	static async update(req: Request, res: Response, next: NextFunction) {
+	static async update(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
 			const { id } = req.params
 			const { state }: { state: deviceStateEnum } = req.body
+			const { Position } = req.body
 
 			const device: IDevice = await DeviceModel.findById(id)
 			if (!device) {
@@ -60,14 +70,20 @@ export default class DeviceController {
 				await device.save()
 			}
 
-			return res.status(200).json({ message: "update" })
+			if ( Position ) {
+				device.Position = Position
+				device.isActivated = true
+				await device.save()
+			}
+
+			return res.status(200).json({ message: "update", device })
 
 		} catch (error) {
 			next(error)
 		}
 	}
 
-	static async delete(req: Request, res: Response, next: NextFunction) {
+	static async delete(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
 			const { id } = req.params
 
@@ -94,12 +110,12 @@ export default class DeviceController {
 		}
 	}
 
-	static async addChildren(req: Request, res: Response, next: NextFunction) {
+	static async addChildren(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
 			const { parent, child } = req.query
 
-			const parentDevice: IDevice = await DeviceModel.findById(parent)
-			const childDevice: IDevice = await DeviceModel.findById(child)
+			const parentDevice: IDevice = await DeviceModel.findById(parent.toString().replace("/", ""))
+			const childDevice: IDevice = await DeviceModel.findById(child.toString().replace("/", ""))
 
 			if (!parentDevice || !childDevice) {
 				return res.status(404).json({ message: "Device not found" })
@@ -109,6 +125,35 @@ export default class DeviceController {
 			await parentDevice.save()
 
 			return res.status(200).json({ message: "addChildren" })
+		} catch (error) {
+			next(error)
+		}
+	}
+
+	static async removeChildren(req: Request, res: Response, next: NextFunction): Promise<Response> {
+		try {
+			const { parent, child } = req.query
+
+			const parentDevice: IDevice = await DeviceModel.findById(parent.toString().replace("/", ""))
+			const childDevice: IDevice = await DeviceModel.findById(child.toString().replace("/", ""))
+
+			if (!parentDevice || !childDevice) {
+				return res.status(404).json({ message: "Device not found" })
+			}
+
+			const tmpParentDevice: IDevice = await DeviceModel.findByIdAndUpdate(parent.toString().replace("/", ""),
+				{ $pull : {Children: child.toString().replace("/", "")} })
+
+			return res.status(200).json({ message: "removeChildren", parentDevice: tmpParentDevice })
+		} catch (error) {
+			next(error)
+		}
+	}
+
+	static async getCities(req: Request, res: Response, next: NextFunction): Promise<Response> {
+		try {
+			const cities: string[] = await DeviceModel.distinct("City")
+			return res.status(200).json({ cities })
 		} catch (error) {
 			next(error)
 		}

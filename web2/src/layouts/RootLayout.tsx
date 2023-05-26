@@ -44,20 +44,28 @@ export default function RootLayout (): JSX.Element {
 	} = theme.useToken();
 
 	return (
-		<Layout style={{ minWidth: "100dvw", minHeight: "100dvh", padding: 0 }}>
-			<Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+		<Layout style={{ minWidth: "100dvw", minHeight: "100dvh" }}>
+			<Sider width={250} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
 				{/* Logo and Header */}
+				<div style={{ height: "64px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+					<Typography.Title level={3} style={{ color: "white", margin: 0 }}>
+						CWM
+					</Typography.Title>
+				</div>
+
 				<SideMenu user={user}/>
 			</Sider>
 			<Layout>
-				<Header style={{ textAlign: "center",padding: 0, background: colorBgContainer }} >
+				<Header style={{ textAlign: "center", background: colorBgContainer }} >
 					<Typography.Title level={2}>
 						Central Water Management
 					</Typography.Title>
 				</Header>
-				<Content>
+
+				<Content style={{ backgroundColor: "oldlace"}}>
 					<Outlet />
 				</Content>
+
 				<Footer style={{ textAlign: 'center' }}>CWM ©{ (new Date()).getFullYear() } Created by Euael and Sherif </Footer>
 			</Layout>
 		</Layout>
@@ -71,16 +79,16 @@ function SideMenu({user} : { user: IUser | null}) {
 	const items: MenuItem[] = [
 		getItem('View Usage Data', '/', true, <PieChartOutlined />),
 		getItem('Customer', 'sub1', show, <UserOutlined />, [
-			getItem('View Customers', 'view-customers', show, <TeamOutlined />),
-			getItem('Add Customer', 'add-customer', show, <PlusOutlined />),
+			getItem('View Customers', '/view-customers', show, <TeamOutlined />),
+			getItem('Add Customer', '/add-customer', show, <PlusOutlined />),
 		]),
 		getItem('Devices', 'sub2', show, <PartitionOutlined />, [
-			getItem('Show Devices', 'show-devices', show, <PlaySquareOutlined />),
-			getItem('Add Device', 'add-device', show, <PlusOutlined />)
+			getItem('Show Devices', '/show-devices', show, <PlaySquareOutlined />),
+			getItem('Add Device', '/add-device', show, <PlusOutlined />)
 		]),
-		getItem("Bills", "bills", show, <SolutionOutlined />),
-		getItem('Setting', 'setting', show, <SettingOutlined />),
-		getItem("Logout", "logout", show, <LogoutOutlined />),
+		getItem("Bills", "/bills", show, <SolutionOutlined />),
+		getItem('Setting', '/setting', show, <SettingOutlined />),
+		getItem("Logout", "/logout", show, <LogoutOutlined />),
 		getItem("login", "auth/login", !show, <LoginOutlined />)
 	];
 
@@ -90,6 +98,7 @@ function SideMenu({user} : { user: IUser | null}) {
 
 	return (
 		<Menu
+			style={{ fontSize: "1.1rem", fontWeight: 600 }}
 			theme="dark"
 			defaultSelectedKeys={['/']}
 			mode="inline"
