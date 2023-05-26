@@ -1,0 +1,49 @@
+import './App.css'
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
+
+import AuthLayout from "./layouts/AuthLayout.tsx";
+import NotFound from "./pages/NotFound.tsx";
+import RootLayout from "./layouts/RootLayout.tsx";
+import Logout from "./helper/Logout.tsx";
+import Login from "./pages/Login.tsx";
+import {UserProvider} from "./helper/UserProvider.tsx";
+import Home from "./pages/Home.tsx";
+import Authenticate from "./helper/Authenticate.tsx";
+import Bills from "./pages/Bills.tsx";
+import Setting from "./pages/Setting.tsx";
+
+const router = createBrowserRouter(
+	createRoutesFromElements(
+		<Route>
+			<Route path="auth" element={<AuthLayout />} >
+				<Route path="login" element={<Login />} />
+			</Route>
+
+			<Route path='/' element={<RootLayout />}>
+				<Route index element={<Home />} />
+				<Route element={<Authenticate />}>
+					<Route path="bills" element={<Bills />} />
+					<Route path="setting" element={<Setting />} />
+
+
+				</Route>
+
+				<Route path='logout' element={<Logout />} />
+			</Route>
+
+			<Route path="*" element={<NotFound />} />
+		</Route>
+	)
+)
+
+function App() {
+
+	return (
+		<UserProvider>
+			<RouterProvider router={router} />
+		</UserProvider>
+
+	)
+}
+
+export default App

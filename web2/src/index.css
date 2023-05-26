@@ -1,0 +1,9 @@
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 100dvw;
+  min-height: 100dvh;
+}
+
