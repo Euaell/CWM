@@ -13,7 +13,6 @@ import Bills from "./pages/Bills.tsx";
 import Setting from "./pages/Setting.tsx";
 import ShowDevices, {ChartView, TableView} from "./pages/devices/ShowDevices.tsx";
 import AddDevice from "./pages/devices/AddDevice.tsx";
-import React from "react";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(

@@ -18,7 +18,7 @@ const freshAddDeviceMode = (): IAddDevice => ({
 
 export default function AddDevice(): JSX.Element {
 	const [cityOptions, setCityOptions] = useState(Array<string>)
-	const [city, setCity] = useState([])
+	const [city, setCity] = useState(Array<string>)
 	const { values, setValues, handleChange, errors, setErrors } = useForm(freshAddDeviceMode())
 	const [loading, setLoading] = useState(false)
 	const [messageApi, contextHolder] = message.useMessage()

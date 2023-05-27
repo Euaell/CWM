@@ -1,9 +1,9 @@
 import React, { JSX, useEffect, useState } from "react";
 import { apiEndpoint, ENDPOINTS } from "../../helper/api";
 import Loading from "../../components/Loading.tsx";
-import {Empty, Form, Layout, Menu} from "antd";
+import { Layout, Menu } from "antd";
 import type { MenuProps } from "antd";
-import {Outlet, useNavigate, useOutletContext} from "react-router-dom";
+import { Outlet, useNavigate, useOutletContext } from "react-router-dom";
 import Flow from "../../components/FlowChart/Flow.tsx";
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -85,7 +85,7 @@ export function TableView(): JSX.Element {
 
 export function ChartView(): JSX.Element {
 	const [devices, setDevices]: Array<any> = useState([])
-	const [edges, setEdges]: Array<any> = useState([])
+	const [edges]: Array<any> = useState([])
 	const [loading, setLoading] = useState(true)
 
 	const edgeID: Set<string> = new Set()
