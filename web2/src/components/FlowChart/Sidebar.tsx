@@ -1,6 +1,6 @@
 import { DragEvent, useEffect, useState } from 'react';
 import { apiEndpoint, ENDPOINTS } from "../../helper/api";
-import {Card, Col, Row, Typography} from "antd";
+import {Card, Col, Empty, Row, Typography} from "antd";
 
 export default function Sidebar(): JSX.Element {
 	const [inActiveDevices, setInActiveDevices]: Array<any> = useState([])
@@ -21,6 +21,14 @@ export default function Sidebar(): JSX.Element {
 		event.dataTransfer.effectAllowed = 'move';
 	}
 
+	const onDragEnd = (event: React.DragEvent<HTMLDivElement>, id: string) => {
+		// console.table({x: event.clientX, y: event.clientY, screenX: event.screenX, screenY: event.screenY, pageX: event.pageX, pageY: event.pageY})
+		// remove the device from inactive de-vices
+		if (event.pageX < 1217 && event.pageX > 263 && event.pageY > 138 && event.pageY < 698) {
+			setInActiveDevices(inActiveDevices.filter((device: any) => device._id !== id))
+		}
+	}
+
 	return (
 		<aside style={{ margin: 5}}>
 			<div className="description">
@@ -29,10 +37,9 @@ export default function Sidebar(): JSX.Element {
 				</Typography.Title>
 			</div>
 
-
-
 			<Row gutter={8} style={{ padding: 3 }}>
 				{
+					inActiveDevices.length > 0 ?
 					inActiveDevices.map((devices: any) => {
 						return (
 							<Col span={4} key={devices._id}>
@@ -40,6 +47,7 @@ export default function Sidebar(): JSX.Element {
 									  style={{margin: 3 }}
 									  title={devices.Label}
 									  onDragStart={(event:  DragEvent<HTMLDivElement>) => onDragStart(event, devices._id)}
+									  onDragEnd={(event:  DragEvent<HTMLDivElement>) => onDragEnd(event, devices._id)}
 									  draggable
 								>
 									<p>{devices.Address}, {devices.City}</p>
@@ -47,6 +55,8 @@ export default function Sidebar(): JSX.Element {
 							</Col>
 						)
 					})
+						:
+					<Empty description="No devices found" />
 				}
 			</Row>
 

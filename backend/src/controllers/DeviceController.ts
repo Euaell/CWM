@@ -41,14 +41,14 @@ export default class DeviceController {
 				return res.status(404).json({ message: "Device not found" })
 			}
 			if (device.State === deviceStateEnum.close) {
-				return res.status(200).json({ message: "close" })
+				return res.status(200).json({ message: deviceStateEnum.close })
 			}
 			if (flow) {
 				device.FlowRate = flow
 				await device.save()
 			}
 
-			return res.status(200).json({ message: "read" })
+			return res.status(200).json({ message: deviceStateEnum.open })
 
 		} catch (error) {
 			next(error)
@@ -58,15 +58,15 @@ export default class DeviceController {
 	static async update(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
 			const { id } = req.params
-			const { state }: { state: deviceStateEnum } = req.body
+			const { State }: { State: deviceStateEnum } = req.body
 			const { Position } = req.body
 
 			const device: IDevice = await DeviceModel.findById(id)
 			if (!device) {
 				return res.status(404).json({ message: "Device not found" })
 			}
-			if (state) {
-				device.State = state
+			if (State) {
+				device.State = State
 				await device.save()
 			}
 

@@ -14,7 +14,7 @@ import { useCallback, useRef, useState } from "react"
 import CustomNode from "./CustomNode.tsx"
 import Sidebar from "./Sidebar.tsx"
 import {apiEndpoint, ENDPOINTS} from "../../helper/api";
-import {Button, message} from "antd";
+import { Button, message } from "antd";
 
 const nodeTypes = {
 	custom: CustomNode
