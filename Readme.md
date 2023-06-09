@@ -15,7 +15,7 @@ After installing Node.js and MongoDB, you need to clone the project from GitHub.
 running the following command in your terminal.
 
 ```bash
-git clone url
+git clone https://github.com/Euaell/CWM.git
 ```
 
 After cloning the project, you need to install the dependencies of the project. You can install the dependencies
