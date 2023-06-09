@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express"
 import CustomerModel, { ICustomer } from "../models/CustomerModel"
+import BillModel from "../models/BillModel";
 
 export default class CustomerController {
 	static async createCustomer(req: Request, res: Response, next: NextFunction): Promise<Response> {
@@ -76,5 +77,15 @@ export default class CustomerController {
 		}
 	}
 
+	static async getAverageYearlyRevenue(req: Request, res: Response, next: NextFunction): Promise<Response> {
+		try {
+			const customers: number = await CustomerModel.countDocuments()
+			const total: number = (await BillModel.find()).reduce((acc, bill) => acc + bill.Amount, 0)
 
+			return res.status(200).json({ average: total, customers })
+
+		} catch (error) {
+			next(error)
+		}
+	}
 }

@@ -1,5 +1,7 @@
 import { Response, Request, NextFunction } from "express"
 import UserModel, {IUser, roleEnum} from "../models/UserModel";
+import DeviceModel, {IDevice} from "../models/DeviceModel";
+import CustomerModel, {ICustomer} from "../models/CustomerModel";
 
 
 export default class UserController {
@@ -159,5 +161,23 @@ export default class UserController {
 		}
 	}
 
+	static async getCitiesAndUsages(req: Request, res: Response, next: NextFunction): Promise<Response> {
+		try {
+			const cities: string[] = await DeviceModel.distinct("City")
+			const usage: number[] = Array(cities.length).fill(0)
+			for await (const city of cities) {
+				const devices: IDevice[] = await DeviceModel.find({ City: city })
+				// add up all the usages
+				const customers: ICustomer[] = await CustomerModel.find({ Device: { $in: devices } })
+				for await (const customer of customers) {
+					const usageIndex = cities.indexOf(city)
+					usage[usageIndex] += customer.Volume
+				}
+			}
 
+			return res.status(200).json({ cities, usage })
+		} catch (error) {
+			next(error)
+		}
+	}
 }

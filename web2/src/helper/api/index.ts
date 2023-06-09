@@ -14,7 +14,8 @@ interface IEndpoints {
 		getCustomerByID: string,
 		addCustomer: string,
 		updateCustomer: string,
-		deleteCustomer: string
+		deleteCustomer: string,
+		getCustomerAverage: string
 	},
 	devices: {
 		getDevices: string,
@@ -31,12 +32,14 @@ interface IEndpoints {
 		getBills: string,
 		getBillByID: string,
 		getBillChartData: string,
-		getBillChardDataByYear: string
+		getBillChardDataByYear: string,
+		getUsageDataByYear: string
 	},
 	user: {
 		login: string,
 		logout: string,
-		verify: string
+		verify: string,
+		getCitiesAndUsages: string
 	}
 }
 
@@ -46,7 +49,8 @@ export const ENDPOINTS: IEndpoints = {
 		getCustomerByID: "customers",
 		addCustomer: "customers/create",
 		updateCustomer: "customers",
-		deleteCustomer: "customers"
+		deleteCustomer: "customers",
+		getCustomerAverage: "customers/customer-average"
 	},
 	devices: {
 		getDevices: "devices",
@@ -63,12 +67,14 @@ export const ENDPOINTS: IEndpoints = {
 		getBills: "bills",
 		getBillByID: "bills",
 		getBillChartData: "bills/get-chart-data",
-		getBillChardDataByYear: "bills/get-chart-yearly-data"
+		getBillChardDataByYear: "bills/get-chart-yearly-data",
+		getUsageDataByYear: "bills/get-yearly-usage-data"
 	},
 	user: {
 		login: "users/login",
 		logout: "users/logout",
-		verify: "users/verifyuser"
+		verify: "users/verifyuser",
+		getCitiesAndUsages: "users/get-cities-usage"
 	}
 }
 

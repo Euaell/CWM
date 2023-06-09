@@ -11,6 +11,7 @@ router.post("/", UserController.createUser)
 router.post("/changePassword", Authenticate.authenticate, Authenticate.authorize, UserController.changePassword)
 
 router.get("/", UserController.getUsers)
+router.get("/get-cities-usage", Authenticate.authenticate, UserController.getCitiesAndUsages)
 router.get("/:id", UserController.getUser)
 router.put("/:id", Authenticate.authenticate, Authenticate.authorize, UserController.updateUser)
 router.delete("/:id", Authenticate.authenticate, Authenticate.authorize, UserController.deleteUser)

@@ -126,4 +126,22 @@ export default class BillController {
 			next(error)
 		}
 	}
+
+	static async getUsageDataByYear(req: Request, res: Response, next: NextFunction): Promise<Response> {
+		try {
+			const { year } = req.query
+			// return in the format { usage: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]}
+			const yearNumber: number = Number(year as string)
+
+			const bills: IBill[] = await BillModel.find({ CreatedAt: { $gte: new Date(yearNumber, 0, 1), $lte: new Date(yearNumber, 11, 31) } })
+			const usage: number[] = Array(12).fill(0)
+			for await (const bill of bills) {
+				usage[bill.CreatedAt.getMonth()] += bill.Volume
+			}
+
+			return res.status(200).json({ usage })
+		} catch (error) {
+			next(error)
+		}
+	}
 }
