@@ -37,28 +37,28 @@ export default function Sidebar(): JSX.Element {
 				</Typography.Title>
 			</div>
 
-			<Row gutter={8} style={{ padding: 3 }}>
-				{
-					inActiveDevices.length > 0 ?
-					inActiveDevices.map((devices: any) => {
+			{
+				inActiveDevices.length > 0 ?
+				<Row gutter={8} style={{ padding: 3 }}>
+					{inActiveDevices.map((devices: any) => {
 						return (
 							<Col span={4} key={devices._id}>
 								<Card className="dndnode input"
-									  style={{margin: 3 }}
+									  style={{margin: 3}}
 									  title={devices.Label}
-									  onDragStart={(event:  DragEvent<HTMLDivElement>) => onDragStart(event, devices._id)}
-									  onDragEnd={(event:  DragEvent<HTMLDivElement>) => onDragEnd(event, devices._id)}
+									  onDragStart={(event: DragEvent<HTMLDivElement>) => onDragStart(event, devices._id)}
+									  onDragEnd={(event: DragEvent<HTMLDivElement>) => onDragEnd(event, devices._id)}
 									  draggable
 								>
 									<p>{devices.Address}, {devices.City}</p>
 								</Card>
 							</Col>
 						)
-					})
-						:
-					<Empty description="No devices found" />
-				}
-			</Row>
+					})}
+				</Row>
+					:
+				<Empty description="No devices found" />
+			}
 
 		</aside>
 	)

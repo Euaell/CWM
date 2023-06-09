@@ -25,6 +25,7 @@ interface IEndpoints {
 		addChildren: string,
 		removeChildren: string
 		getCities: string
+		getAvailableDevices: string
 	},
 	bills: {
 		getBills: string,
@@ -41,7 +42,7 @@ export const ENDPOINTS: IEndpoints = {
 	customers: {
 		getCustomers: "customers",
 		getCustomerByID: "customers",
-		addCustomer: "customers",
+		addCustomer: "customers/create",
 		updateCustomer: "customers",
 		deleteCustomer: "customers"
 	},
@@ -53,7 +54,8 @@ export const ENDPOINTS: IEndpoints = {
 		deleteDevice: "devices",
 		addChildren: "devices/add-children",
 		removeChildren: "devices/remove-children",
-		getCities: "devices/get-cities"
+		getCities: "devices/get-cities",
+		getAvailableDevices: "devices/get-available-devices"
 	},
 	bills: {
 		getBills: "bills",

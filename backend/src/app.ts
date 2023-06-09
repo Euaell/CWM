@@ -31,6 +31,8 @@ if (process.env.NODE_ENV !== "production") {
 
 app.use("/api/v2/users", Routes.UserRoute)
 app.use("/api/v2/devices", Routes.DeviceRoute)
+app.use("/api/v2/customers", Routes.CustomerRoute)
+app.use("/api/v2/bills", Routes.BillRoute)
 
 app.get("/", (req: Request, res: Response, next: NextFunction) => {
     res.status(200).json({ message: "Hello World!" })

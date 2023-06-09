@@ -8,12 +8,12 @@ import ReactFlow, {
 	addEdge,
 	ReactFlowProvider
 } from 'reactflow'
-import 'reactflow/dist/style.css'
+import 'reactflow/dist/style.css' // necessary for default styles and to make it work
 
 import { useCallback, useRef, useState } from "react"
 import CustomNode from "./CustomNode.tsx"
 import Sidebar from "./Sidebar.tsx"
-import {apiEndpoint, ENDPOINTS} from "../../helper/api";
+import { apiEndpoint, ENDPOINTS } from "../../helper/api";
 import { Button, message } from "antd";
 
 const nodeTypes = {
@@ -124,12 +124,12 @@ export default function Flow({ InitialNodes, InitialEdges }: { InitialNodes: Arr
 					edges={edges}
 					onEdgesChange={onEdgesChange}
 
+					onInit={setReactFlowInstance}
 					className="react-flow-node-toolbar-example"
 					nodeTypes={nodeTypes}
 					fitView
-					defaultEdgeOptions={{ animated: true }}
+					defaultEdgeOptions={{ animated: true, style: { stroke: '#0047AB', strokeWidth: '3.5' } }}
 					onConnect={onConnect}
-					onInit={setReactFlowInstance}
 					onNodesDelete={onNodesDelete}
 					onEdgesDelete={onEdgesDelete}
 
@@ -145,7 +145,7 @@ export default function Flow({ InitialNodes, InitialEdges }: { InitialNodes: Arr
 				</ReactFlow>
 
 			</div>
-			<Button onClick={() => setShowMiniMap(!showMiniMap)}>{ showMiniMap ? "Hide" : "Show"}</Button>
+			<Button onClick={() => setShowMiniMap(!showMiniMap)}>{ showMiniMap ? "Hide Map" : "Show Map"}</Button>
 			<Sidebar />
 		</ReactFlowProvider>
 	)

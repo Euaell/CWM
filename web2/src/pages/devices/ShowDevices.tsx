@@ -1,18 +1,29 @@
-import React, { JSX, useEffect, useState } from "react";
+import React, {JSX, useEffect, useRef, useState} from "react";
 import { apiEndpoint, ENDPOINTS } from "../../helper/api";
 import Loading from "../../components/Loading.tsx";
-import { Layout, Menu } from "antd";
+import {Button, Input, InputRef, Layout, Menu, message, Pagination, Popover, QRCode, Space, Table} from "antd";
 import type { MenuProps } from "antd";
-import { Outlet, useNavigate, useOutletContext } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import Flow from "../../components/FlowChart/Flow.tsx";
+import { SearchOutlined } from '@ant-design/icons';
+import type { FilterConfirmProps } from 'antd/es/table/interface';
+import Highlighter from 'react-highlight-words';
+import {ColumnsType, ColumnType} from "antd/es/table";
+
+interface DataType {
+  key: React.Key;
+  name: string;
+  age: number;
+  address: string;
+}
+
+type DataIndex = keyof DataType;
 
 type MenuItem = Required<MenuProps>['items'][number];
 
 const { Header, Content } = Layout
 
 export default function ShowDevices(): JSX.Element {
-	const [devices, setDevices] = useState([])
-	const [loading, setLoading] = useState(true)
 	const navigate = useNavigate()
 
 	const items: MenuItem[] = [
@@ -31,22 +42,6 @@ export default function ShowDevices(): JSX.Element {
 	}
 
 	useEffect(() => {
-		apiEndpoint(ENDPOINTS.devices.getDevices)
-			.get()
-			.then((response) => {
-				return response.data;
-			})
-			.then((data) => {
-				setDevices(data.devices)
-				console.log(data)
-			})
-			.catch((error) => {
-				console.log(error)
-			})
-			.finally(() => {
-				setLoading(false)
-			})
-
 		return () => {
 			console.log("unmount")
 		}
@@ -54,7 +49,7 @@ export default function ShowDevices(): JSX.Element {
 
 	return (
 		<Layout>
-			<Header style={{ backgroundColor: "white"}}>
+			<Header style={{ backgroundColor: "white" }}>
 				<Menu theme="light"
 					  mode="horizontal"
 					  defaultSelectedKeys={["/show-devices"]}
@@ -65,20 +60,231 @@ export default function ShowDevices(): JSX.Element {
 			</Header>
 
 			<Content style={{ padding: 5 }}>
-				{ loading ? <Loading /> : <Outlet context={ { devices } } /> }
+				 <Outlet />
 			</Content>
 		</Layout>
 	)
 }
 
 export function TableView(): JSX.Element {
-	const context: any = useOutletContext()
-	const { devices } = context
+	const [devices, setDevices]: Array<any> = useState([])
+	const [loading, setLoading] = useState(true)
+	const [searchText, setSearchText] = React.useState<string>('');
+	const [searchedColumn, setSearchedColumn] = React.useState<DataIndex>();
+	const searchInput = useRef<InputRef>(null);
+	const [messageApi, contextHolder] = message.useMessage()
 
-	console.log(devices)
+	const [page, setPage] = React.useState(1);
+	const [limit, setLimit] = React.useState(10);
+	const [total, setTotal] = React.useState(0);
+
+	function fetchDevices(dataIndex: DataIndex | null = null, value: string | number | boolean | null = null, startOver: boolean = false) {
+		setLoading(true)
+		apiEndpoint(ENDPOINTS.devices.getDevices + `?limit=${limit}&page=${(startOver ? 1 : page)}` + (dataIndex ? `&${dataIndex}=${value}` : ''))
+			.get()
+			.then((response) => {
+				return response.data
+			})
+			.then((data) => {
+				console.log(data)
+				setDevices(data.devices)
+				setTotal(data.total)
+			})
+			.catch(error => {
+				console.error(error)
+				messageApi.error("Error while fetching devices")
+			})
+			.finally(() => {
+				setLoading(false)
+			})
+	}
+
+	function handleSearch(selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) {
+		confirm();
+    	setSearchText(selectedKeys[0]);
+    	setSearchedColumn(dataIndex);
+		fetchDevices(dataIndex, selectedKeys[0], true)
+	}
+
+	const handleReset = (clearFilters: () => void) => {
+		clearFilters();
+		setSearchText('');
+		setSearchedColumn(undefined);
+		fetchDevices()
+	};
+
+	function getColumnSearchProps (dataIndex: DataIndex): ColumnType<DataType> {
+
+		return {
+			filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+				<div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+					<Input
+						ref={searchInput}
+						placeholder={`Search ${dataIndex}`}
+						value={selectedKeys[0]}
+						onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+						onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+						style={{ marginBottom: 8, display: 'block' }}
+					/>
+					<Space>
+						<Button
+							type="primary"
+							onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+							icon={<SearchOutlined />}
+							size="small"
+							style={{ width: 90 }}
+						>
+							Search
+						</Button>
+						<Button
+							onClick={() => clearFilters && handleReset(clearFilters)}
+							size="small"
+							style={{ width: 90 }}
+						>
+							Reset
+						</Button>
+						<Button
+							type="link"
+							size="small"
+							onClick={() => {
+								confirm({ closeDropdown: false });
+								setSearchText((selectedKeys as string[])[0]);
+								setSearchedColumn(dataIndex);
+							}}
+						>
+							Filter
+						</Button>
+
+						<Button
+							type="link"
+							size="small"
+							onClick={() => {
+								close();
+							}}
+						>
+							close
+						</Button>
+
+					</Space>
+				</div>
+			),
+			filterIcon: (filtered: boolean) => <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
+			onFilterDropdownOpenChange: (visible: boolean) => {
+				if (visible) {
+					setTimeout(() => searchInput.current?.select(), 100);
+				}
+			},
+			render: (text: string) =>
+				searchedColumn === dataIndex ? (
+					<Highlighter
+						highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+						searchWords={[searchText]}
+						autoEscape
+						textToHighlight={text ? text.toString() : ''}
+					/>
+				) : (
+					text
+				),
+		};
+
+	}
+
+	function downloadQRCode(_id: string) {
+		const canvas = document.getElementById(_id)?.querySelector('canvas') as HTMLCanvasElement
+		const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+		let downloadLink = document.createElement("a");
+		downloadLink.href = pngUrl;
+		downloadLink.download = _id + ".png";
+		document.body.appendChild(downloadLink);
+		downloadLink.click();
+		document.body.removeChild(downloadLink);
+	}
+
+	const columns: ColumnsType<DataType> = [
+		{
+			title: 'Status',
+			dataIndex: 'Status',
+			key: "Status",
+			render: (_, record: any) => (
+				<span>{record.isActivated ? 'Active' : 'Inactive'}</span>
+			)
+		},
+		{
+			title: 'City',
+			dataIndex: 'City',
+			key: "City",
+			...getColumnSearchProps('City' as DataIndex)
+		},
+		{
+			title: 'Address',
+			dataIndex: 'Address',
+			key: "Address",
+			...getColumnSearchProps('Address' as DataIndex)
+		},
+		{
+			title: 'Admim',
+			dataIndex: 'Admim',
+			key: "Admim",
+			render: (_, record: any) => (
+				<span>{record.Admin.Name}</span>
+			)
+		},
+		{
+			title: 'FlowRate',
+			dataIndex: 'FlowRate',
+			key: "FlowRate",
+			sorter: (a: any, b: any) => a.FlowRate - b.FlowRate,
+		},
+		{
+			title: 'Action',
+			key: 'action',
+			render: (_, record: any) => (
+				// render a button for each row that will open a popover with a qr code and a button to download it
+				<Popover
+					id={record._id}
+					content={ <QRCode value={record._id} /> }
+					trigger="hover"
+				>
+					<Button onClick={() => downloadQRCode(record._id)}>
+						QR Code
+					</Button>
+				</Popover>
+			),
+		}
+];
+
+	useEffect(() => {
+		fetchDevices()
+		return () => {
+			setDevices([])
+		}
+	}, [limit, page])
+
+	if (loading) return <Loading />
+
 	return (
 		<div>
-			Show Devices
+			{contextHolder}
+			<Table
+				columns={columns}
+				dataSource={devices}
+				loading={loading}
+				rowKey={(record: any) => record._id}
+				pagination={false}
+			/>
+
+			<Pagination
+				style={{ marginTop: 20, marginLeft: "60%" }}
+				current={page}
+				pageSize={limit}
+				total={total}
+				showSizeChanger
+				showTotal={(total, range) => `${range[0]}-${range[1]} of ${total} items`}
+				onChange={(page, limit) => {
+					setPage(page)
+					setLimit(limit)
+				}}
+			/>
 		</div>
 	)
 }
@@ -108,7 +314,7 @@ export function ChartView(): JSX.Element {
 				}))
 
 				const tmpDevice = await Promise.all(devices.map(async (device: any) => {
-					return { id: device._id, type: "custom", position: device.Position, data: { label: device.Label, state: device.State }}
+					return { id: device._id, type: "custom", position: device.Position, data: { label: device.FlowRate, state: device.State }}
 				}))
 
 				setDevices(tmpDevice)

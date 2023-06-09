@@ -45,10 +45,10 @@ export default function RootLayout (): JSX.Element {
 
 	return (
 		<Layout style={{ minWidth: "100dvw", minHeight: "100dvh" }}>
-			<Sider width={250} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+			<Sider theme={'light'} width={250} collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
 				{/* Logo and Header */}
 				<div style={{ height: "64px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-					<Typography.Title level={3} style={{ color: "white", margin: 0 }}>
+					<Typography.Title level={3} style={{ margin: 0 }}>
 						CWM
 					</Typography.Title>
 				</div>
@@ -56,13 +56,13 @@ export default function RootLayout (): JSX.Element {
 				<SideMenu user={user}/>
 			</Sider>
 			<Layout>
-				<Header style={{ textAlign: "center", background: colorBgContainer }} >
-					<Typography.Title level={2}>
+				<Header style={{ textAlign: "center" }} >
+					<Typography.Title level={2} style={{ color: "white" }}>
 						Central Water Management
 					</Typography.Title>
 				</Header>
 
-				<Content style={{ backgroundColor: "oldlace"}}>
+				<Content style={{ backgroundColor: "white"}}>
 					<Outlet />
 				</Content>
 
@@ -98,8 +98,8 @@ function SideMenu({user} : { user: IUser | null}) {
 
 	return (
 		<Menu
-			style={{ fontSize: "1.1rem", fontWeight: 600 }}
-			theme="dark"
+			style={{ fontSize: "1.1rem", fontWeight: 400 }}
+			theme="light"
 			defaultSelectedKeys={['/']}
 			mode="inline"
 			items={items}

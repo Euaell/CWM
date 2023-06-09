@@ -7,6 +7,7 @@ const router: Router = Router()
 router.post("/", Authenticate.authenticate, Authenticate.authorize, DeviceController.create)
 router.get("/", Authenticate.authenticate, DeviceController.getAll)
 router.get("/get-cities", Authenticate.authenticate, DeviceController.getCities)
+router.get("/get-available-devices", Authenticate.authenticate, DeviceController.getAvailableDevices)
 
 router.put("/add-children", Authenticate.authenticate, Authenticate.authorize, DeviceController.addChildren)
 router.put("/remove-children", Authenticate.authenticate, Authenticate.authorize, DeviceController.removeChildren)

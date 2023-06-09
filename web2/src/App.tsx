@@ -13,6 +13,8 @@ import Bills from "./pages/Bills.tsx";
 import Setting from "./pages/Setting.tsx";
 import ShowDevices, {ChartView, TableView} from "./pages/devices/ShowDevices.tsx";
 import AddDevice from "./pages/devices/AddDevice.tsx";
+import AddCustomer from "./pages/customers/AddCustomer.tsx";
+import ViewCustomers from "./pages/customers/ViewCustomers.tsx";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -34,6 +36,9 @@ const router = createBrowserRouter(
 					</Route>
 					<Route path="add-device" element={<AddDevice />} />
 
+					{/* Customers */}
+					<Route path="add-customer" element={<AddCustomer />} />
+					<Route path="view-customers" element={<ViewCustomers />} />
 				</Route>
 
 				<Route path='logout' element={<Logout />} />
