@@ -26,12 +26,13 @@ by running the following command in your terminal.(From the root directory of th
 cd backend
 npm install
 ```
+The documentation for the backend api can be found [here](https://documenter.getpostman.com/view/18732335/2s93sc3XD2)
+***
 2. to install the dependencies of the client or web application
 ```bash
 cd web2
 npm install
 ```
-
 ## Running the project
 To run the project, you first need to provide the environment variables. You can do this by creating a file named
 `.env` in the root directory of both `./web2` and `./backend`. You can copy the content of the `.env.example` file and paste it in the
@@ -44,7 +45,7 @@ After providing the environment variables, you can run the project by running th
 cd backend
 npm start
 ```
-
+***
 2. to run the client or web application
 ```bash
 cd web2
