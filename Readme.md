@@ -67,4 +67,4 @@ The software is written in Node.js and uses MongoDB as a database. The software 
 4. React.js
 5. React Flow
 6. Ant Design
-7. React Chart.js
+7. React Chart.js 2

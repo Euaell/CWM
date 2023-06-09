@@ -7,7 +7,7 @@ export default class BillController {
 		try {
 			const { limit, page } = req.query
 			const total: number = await BillModel.countDocuments()
-			const bills: IBill[] = await BillModel.find().limit(parseInt(limit as string)).skip((parseInt(page as string) - 1) * parseInt(limit as string))
+			const bills: IBill[] = await BillModel.find().limit(parseInt(limit as string)).skip((parseInt(page as string) - 1) * parseInt(limit as string)).populate('Customer', '-__v -Password -Device -createdAt -updatedAt')
 			return res.status(200).json({ bills, total })
 		} catch (error) {
 			next(error)

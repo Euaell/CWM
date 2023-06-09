@@ -158,7 +158,6 @@ export default function AddCustomer(): JSX.Element {
 					>
 						{availableDevices && availableDevices.map((device: IDeviceTemp) => {
 							return <Select.Option key={device._id} value={device._id}>{device.Label}</Select.Option>
-
 						})}
 					</Select>
 				</Form.Item>
