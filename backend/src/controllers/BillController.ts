@@ -79,4 +79,51 @@ export default class BillController {
 			next(error)
 		}
 	}
+
+	static async getBillChartData(req: Request, res: Response, next: NextFunction): Promise<Response> {
+		try {
+			const bills: IBill[] = await BillModel.find()
+			let Paid: number = 0
+			let Unpaid: number = 0
+			let Overdue: number = 0
+			for await (const bill of bills) {
+				if (bill.Paid) {
+					Paid++
+				} else {
+					// check if the bill is overdue( 15 days after the bill is created)
+					if (bill.CreatedAt.getTime() + 15 * 24 * 60 * 60 * 1000 < Date.now()) {
+						Overdue++
+					} else {
+						Unpaid++
+					}
+				}
+			}
+
+			return res.status(200).json([ Paid, Unpaid, Overdue ])
+		} catch (error) {
+			next(error)
+		}
+	}
+
+	static async getBillChardDataByYear(req: Request, res: Response, next: NextFunction): Promise<Response> {
+		try {
+			const { year } = req.query
+			// return in the format { paid: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], unpaid: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}, (overdue the same as unpaid)
+			const yearNumber: number = Number(year as string)
+			const bills: IBill[] = await BillModel.find({ CreatedAt: { $gte: new Date(yearNumber, 0, 1), $lte: new Date(yearNumber, 11, 31) } })
+			const paid: number[] = Array(12).fill(0)
+			const unpaid: number[] = Array(12).fill(0)
+			for await (const bill of bills) {
+				if (bill.Paid) {
+					paid[bill.CreatedAt.getMonth()]++
+				} else {
+					unpaid[bill.CreatedAt.getMonth()]++
+				}
+			}
+
+			return res.status(200).json({ paid, unpaid })
+		} catch (error) {
+			next(error)
+		}
+	}
 }

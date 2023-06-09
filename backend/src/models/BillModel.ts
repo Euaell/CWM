@@ -13,6 +13,7 @@ export interface IBill extends Document {
 	Volume: number
 	Paid: boolean
 	BillingPeriod: billingPeriodEnum
+	CreatedAt: Date
 }
 
 interface BillModel extends Model<IBill> {

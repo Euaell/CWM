@@ -29,7 +29,9 @@ interface IEndpoints {
 	},
 	bills: {
 		getBills: string,
-		getBillByID: string
+		getBillByID: string,
+		getBillChartData: string,
+		getBillChardDataByYear: string
 	},
 	user: {
 		login: string,
@@ -59,7 +61,9 @@ export const ENDPOINTS: IEndpoints = {
 	},
 	bills: {
 		getBills: "bills",
-		getBillByID: "bills"
+		getBillByID: "bills",
+		getBillChartData: "bills/get-chart-data",
+		getBillChardDataByYear: "bills/get-chart-yearly-data"
 	},
 	user: {
 		login: "users/login",
