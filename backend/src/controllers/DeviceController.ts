@@ -195,7 +195,8 @@ export default class DeviceController {
 		try {
 			// get all customers with a device
 			const customers: ICustomer[] = await CustomerModel.find({ Device: { $exists: true } })
-			const devices: IDevice[] = await DeviceModel.find({ _id: { $nin: customers.map(customer => customer.Device) } }).select("_id Label")
+
+			const devices: IDevice[] = await DeviceModel.find({ _id: { $nin: customers.map(customer => customer.Device) }, Children: { $size: 0 } }).select("_id Label")
 
 			return res.status(200).json({ devices })
 		} catch (error) {

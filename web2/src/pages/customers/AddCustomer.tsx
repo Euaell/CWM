@@ -56,6 +56,7 @@ export default function AddCustomer(): JSX.Element {
 					messageApi.success("Customer added successfully")
 					// filter out the device that was selected
 					setAvailableDevices(availableDevices.filter((device) => device._id !== values.Device))
+					setValues({ ...values, Device: ""})
 				})
 				.catch((error) => {
 					console.log(error)
