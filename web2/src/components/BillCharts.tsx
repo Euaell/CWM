@@ -2,6 +2,7 @@ import { Chart as ChartJS, CategoryScale,  LinearScale, BarElement, Title, ArcEl
 import { Pie, Bar } from 'react-chartjs-2';
 import {JSX, useState} from "react";
 import {DatePicker} from "antd";
+import dayjs from "dayjs";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title, LinearScale, CategoryScale, BarElement);
 
@@ -89,6 +90,7 @@ function YearlyBarChart(): JSX.Element {
 				placeholder="Select year"
 				picker="year"
 				onChange={handleYearChange}
+				disabledDate={(current: dayjs.Dayjs) => current && current > dayjs()}
 			/>
 			<Bar height={35} width={80}  data={data} options={options} />
 		</div>

@@ -3,6 +3,7 @@ import type { ColumnsType } from 'antd/es/table';
 import {Button, DatePicker, InputNumber, message, Pagination, Table, Typography} from "antd";
 import { apiEndpoint, ENDPOINTS } from "../helper/api";
 import BillCharts from "../components/BillCharts.tsx";
+import dayjs from "dayjs";
 
 interface DataType {
   key: React.Key;
@@ -120,6 +121,7 @@ export default function Bills(): JSX.Element {
 						onChange={handleMonthChange}
 						placeholder="Select month"
 						picker="month"
+						disabledDate={(current: dayjs.Dayjs) => current && current > dayjs().startOf('month')}
 					/>
 					<div>
 

@@ -1,17 +1,19 @@
 import { Router } from "express"
 import BillController from "../controllers/BillController"
 
+import Authenticate from "../middlewares/Authenticate";
+
 const router = Router()
 
-router.post("/create", BillController.create)
+router.post("/create", Authenticate.authenticate, BillController.create)
 
-router.get("/", BillController.getAll)
-router.get("/get-chart-data", BillController.getBillChartData)
-router.get("/get-chart-yearly-data", BillController.getBillChardDataByYear)
+router.get("/", Authenticate.authenticate, BillController.getAll)
+router.get("/get-chart-data", Authenticate.authenticate, BillController.getBillChartData)
+router.get("/get-chart-yearly-data", Authenticate.authenticate, BillController.getBillChardDataByYear)
 
-router.get("/:id", BillController.read)
+router.get("/:id", Authenticate.authenticate, BillController.read)
 
-router.put("/:id", BillController.update)
-router.delete("/:id", BillController.delete)
+router.put("/:id", Authenticate.authenticate, BillController.update)
+router.delete("/:id", Authenticate.authenticate, BillController.delete)
 
 export default router

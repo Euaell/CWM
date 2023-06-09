@@ -3,7 +3,7 @@ import UserModel, {IUser, roleEnum} from "../models/UserModel";
 
 
 export default class UserController {
-	static async createUser(req: Request, res: Response, next: NextFunction) {
+	static async createUser(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
 			const { Name, Email, Password, Phone } = req.body
 			const user: IUser = await UserModel.create({ Name, Email, Password, Phone })
@@ -11,29 +11,29 @@ export default class UserController {
 			delete userObj.Password
 			delete userObj.__v
 
-			res.status(201).json({ message: "User created", user: userObj })
+			return res.status(201).json({ message: "User created", user: userObj })
 		} catch (error) {
 			next(error)
 		}
 	}
 
-	static async getUsers(req: Request, res: Response, next: NextFunction) {
+	static async getUsers(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
 			const users: IUser[] = await UserModel.find().select("-Password -__v")
-			res.status(200).json({ message: "Users fetched", users })
+			return res.status(200).json({ message: "Users fetched", users })
 		} catch (error) {
 			next(error)
 		}
 	}
 
-	static async getUser(req: Request, res: Response, next: NextFunction) {
+	static async getUser(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
 			const { id } = req.params
 			const user: IUser = await UserModel.findById(id).select("-Password -__v")
 			if (!user) {
-				throw new Error("User not found")
+				return res.status(404).json({ message: "User not found" })
 			}
-			res.status(200).json({ message: "User fetched", user })
+			return res.status(200).json({ message: "User fetched", user })
 		} catch (error) {
 			next(error)
 		}
@@ -62,7 +62,7 @@ export default class UserController {
 		}
 	}
 
-	static async login(req: Request, res: Response, next: NextFunction) {
+	static async login(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
 			const { Email, Password } = req.body
 			const user: IUser = await UserModel.findOne({ Email })
@@ -80,25 +80,25 @@ export default class UserController {
 
 			const token = user.generateToken()
 			res.cookie("token", token, { httpOnly: true, secure: process.env.NODE_ENV === "production" })
-			res.status(200).json({ message: "Login successful", user: userObj, token })
+			return res.status(200).json({ message: "Login successful", user: userObj, token })
 		} catch (error) {
 			next(error)
 		}
 	}
 
-	static async logout(req: Request, res: Response, next: NextFunction) {
+	static async logout(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
 			res.clearCookie("token")
-			res.status(200).json({ message: "Logout successful" })
+			return res.status(200).json({ message: "Logout successful" })
 		} catch (error) {
 			next(error)
 		}
 	}
 
-	static async verifyUser(req: Request, res: Response, next: NextFunction) {
+	static async verifyUser(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
 			const { user } = req.body
-			res.status(200).json({ message: "User verified", user })
+			return res.status(200).json({ message: "User verified", user })
 		} catch (error) {
 			next(error)
 		}
@@ -137,7 +137,7 @@ export default class UserController {
 		}
 	}
 
-	static async changePassword(req: Request, res: Response, next: NextFunction) {
+	static async changePassword(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
 			const { currentPassword: oldPassword, password: newPassword } = req.body
 			console.log(oldPassword, newPassword)
@@ -153,9 +153,11 @@ export default class UserController {
 			delete userObj.password
 			delete userObj.__v
 
-			res.status(200).json({ message: "Password changed", user: userObj })
+			return res.status(200).json({ message: "Password changed", user: userObj })
 		} catch (error) {
 			next(error)
 		}
 	}
+
+
 }
