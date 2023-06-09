@@ -9,7 +9,7 @@ should also be able to simulate the water supply and demand of the city.
 ## Installation
 This Project is written in Node.js and uses MongoDB as a database. To install the project, you need to have
 Node.js and MongoDB installed on your computer. You can install Node.js from [here](https://nodejs.org/en/download/).
-You can install MongoDB from [here](https://www.mongodb.com/download-center/community).
+You can install MongoDB from [here](https://www.mongodb.com/try/download/community).
 
 After installing Node.js and MongoDB, you need to clone the project from GitHub. You can clone the project by
 running the following command in your terminal.
