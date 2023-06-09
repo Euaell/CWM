@@ -14,7 +14,7 @@
 		"expressjs",
 		"water management"
 	],
-	"author": "Euael Mekonen Eshete, Sherif Ahmed",
+	"author": "Euael Mekonen && Sherif Ahmed",
 	"license": "ISC",
 	"dependencies": {
 		"bcrypt": "^5.1.0",
