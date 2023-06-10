@@ -41,11 +41,13 @@ export function UsageByCity(): JSX.Element {
 	}, [])
 
 	const data = {
-		labels: cityData,
+		// labels: cityData,
+		labels: [ 'Kuala Lumpur', 'Petaling Jaya', 'Shah Alam', 'Klang', 'Subang Jaya', 'Kajang', 'Selayang', 'Rawang', 'Sungai Buloh', 'Seremban' ],
 		datasets: [
 			{
 				label: 'Water Usage(KL)',
-				data: usageData,
+				// data: usageData,
+				data: [ 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 ],
 				backgroundColor: [
 					'rgba(233, 216, 166, 0.5)', 'rgba(10, 147, 150, 0.5)',
 					'rgba(0, 27, 45, 0.5)',	'rgba(0, 95, 115, 0.5)',
@@ -115,8 +117,8 @@ export function UsageYearly(): JSX.Element {
 		datasets: [
 			{
 				label: 'Water Usage(KL)',
-				// data: [65, 59, 80, 81, 56, 55, 40, 20, 30, 40, 50, 60],
-				data: usageData,
+				data: [65, 59, 80, 81, 56, 55, 40, 20, 30, 40, 50, 60],
+				// data: usageData,
 				fill: true,
 				borderColor: 'rgb(53, 162, 235)',
       			backgroundColor: 'rgba(53, 162, 235, 0.5)',

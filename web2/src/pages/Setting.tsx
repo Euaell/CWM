@@ -1,6 +1,6 @@
-import {JSX, useState} from "react";
+import { JSX, useState } from "react";
 import useForm from "../helper/useForm.ts";
-import {Button, Form, Input, Typography} from "antd";
+import { Button, Form, Input, Typography } from "antd";
 import {useNavigate} from "react-router-dom";
 import {apiEndpoint, ENDPOINTS} from "../helper/api";
 import {useAuth} from "../helper/useAuth.ts";

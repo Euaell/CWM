@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import {IUser, UserContext} from "./UserProvider.tsx";
+import { IUser, UserContext} from "./UserProvider.tsx";
 
 const getFreshUser = (): IUser => {
 	return {
