@@ -29,7 +29,6 @@ export default function Login() : JSX.Element {
 			apiEndpoint(ENDPOINTS.user.login)
 				.post(values)
 				.then((response) => {
-					setLoading(false)
 					return response.data
 				})
 				.then(data => {
@@ -40,10 +39,12 @@ export default function Login() : JSX.Element {
 					navigate("/")
 				})
 				.catch((error) => {
-					setLoading(false)
 					setErrors({
 						...error.response?.data
 					})
+				})
+				.finally(() => {
+					setLoading(false)
 				})
 		}
 	}

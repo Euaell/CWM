@@ -1,4 +1,4 @@
-import {JSX, useState} from "react";
+import { JSX, useEffect, useState } from "react";
 import {
 	Chart as ChartJS,
 	RadialLinearScale,
@@ -17,21 +17,40 @@ import { PolarArea, Line } from 'react-chartjs-2';
 import { DatePicker, Typography, Col, Row, Statistic } from "antd";
 import CountUp from "react-countup";
 import dayjs from "dayjs";
+import { apiEndpoint, ENDPOINTS } from "../helper/api";
 
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, PointElement, LineElement, Title, Filler);
 
 export function UsageByCity(): JSX.Element {
+	const [usageData, setUsageData] = useState<Array<number>>([])
+	const [cityData, setCityData] = useState<Array<string>>([])
+
+	useEffect(() => {
+		apiEndpoint(ENDPOINTS.user.getCitiesAndUsages)
+			.get()
+			.then((response) => {
+				return response.data
+			})
+			.then((data) => {
+				setCityData(data.cities)
+				setUsageData(data.usages)
+			})
+			.catch((error) => {
+				console.error(error)
+			})
+	}, [])
+
 	const data = {
-		labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange', 'eminiem', 'logic'],
+		labels: cityData,
 		datasets: [
 			{
-				label: '# of Votes',
-				data: [19, 19, 3, 5, 2, 3, 7, 8],
+				label: 'Water Usage(KL)',
+				data: usageData,
 				backgroundColor: [
-					'rgba(233, 216, 166, 0.5)', 'rgba(238, 155, 0, 0.5)',
+					'rgba(233, 216, 166, 0.5)', 'rgba(10, 147, 150, 0.5)',
 					'rgba(0, 27, 45, 0.5)',	'rgba(0, 95, 115, 0.5)',
 					'rgba(202, 103, 2, 0.5)', 'rgba(187, 62, 3, 0.5)',
-					'rgba(10, 147, 150, 0.5)', 'rgba(148, 210, 189, 0.5)',
+					'rgba(238, 155, 0, 0.5)', 'rgba(148, 210, 189, 0.5)',
 					'rgba(174, 32, 18, 0.5)', 'rgba(155, 34, 38, 0.5)'
 				],
 				borderWidth: 1,
@@ -52,6 +71,29 @@ export function UsageByCity(): JSX.Element {
 export function UsageYearly(): JSX.Element {
 	const defaultYear = (new Date()).getFullYear().toString()
 	const [selectedYear, setSelectedYear] = useState(defaultYear)
+	const [usageData, setUsageData] = useState<Array<number>>([])
+
+	function fetchData() {
+		apiEndpoint(ENDPOINTS.bills.getUsageDataByYear + `?year=${selectedYear}`)
+			.get()
+			.then((response) => {
+				return response.data
+			})
+			.then((data) => {
+				setUsageData(data.usage)
+			})
+			.catch((error) => {
+				console.error(error)
+			})
+	}
+
+	useEffect(() => {
+		fetchData()
+
+		return () => {
+			setUsageData([])
+		}
+	}, [selectedYear])
 
 	const options = {
 		responsive: true,
@@ -73,7 +115,8 @@ export function UsageYearly(): JSX.Element {
 		datasets: [
 			{
 				label: 'Water Usage(KL)',
-				data: [65, 59, 80, 81, 56, 55, 40, 20, 30, 40, 50, 60],
+				// data: [65, 59, 80, 81, 56, 55, 40, 20, 30, 40, 50, 60],
+				data: usageData,
 				fill: true,
 				borderColor: 'rgb(53, 162, 235)',
       			backgroundColor: 'rgba(53, 162, 235, 0.5)',
@@ -99,16 +142,35 @@ export function UsageYearly(): JSX.Element {
 }
 
 export function UsersAndRevenueStat(): JSX.Element {
+	const [customers, setCustomers] = useState<number>(0)
+	const [revenue, setRevenue] = useState<number>(0)
+
+	useEffect(() => {
+		apiEndpoint(ENDPOINTS.customers.getCustomerAverage)
+			.get()
+			.then((response) => {
+				return response.data
+			})
+			.then((data) => {
+				console.log(data)
+				setCustomers(data.customers)
+				setRevenue(data.average)
+			})
+			.catch((error) => {
+				console.error(error)
+			})
+	}, [])
+
 	const formatter: any = (value: number) => <CountUp end={value} duration={5} separator="," />;
 
 	return (
 		<div style={{width: "30%", display: "inline-block", margin: 10}} >
 			<Row gutter={16}>
 				<Col span={12}>
-					 <Statistic title="Customers" value={312893} formatter={formatter} />
+					 <Statistic title="Customers" value={customers} formatter={formatter} />
 				</Col>
 				<Col span={12}>
-					<Statistic title="Average Yearly Revenue (Birr)" value={112893} precision={2} formatter={formatter} />
+					<Statistic title="Average Yearly Revenue (Birr)" value={revenue} precision={2} formatter={formatter} />
 				</Col>
 			</Row>
 		</div>

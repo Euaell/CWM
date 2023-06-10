@@ -113,7 +113,7 @@ export default function Bills(): JSX.Element {
 				<Button onClick={handleExport} type="primary" danger>Export</Button>
 			</div>
 
-			<BillCharts bills={bill} />
+			<BillCharts />
 
 			<div style={{ margin: 20 }}>
 				<div style={{ display: "flex", justifyContent: "space-between" }}>

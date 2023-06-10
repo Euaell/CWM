@@ -141,15 +141,17 @@ export default class UserController {
 
 	static async changePassword(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
-			const { currentPassword: oldPassword, password: newPassword } = req.body
-			console.log(oldPassword, newPassword)
-			const { user } = req.body
-			console.log(user)
+			const { currentPassword: oldPassword, newPassword } = req.body
+			// const { user } = req.body
+			// const { _id } = user
+			// combine the above two lines
+			const { user: { _id } } = req.body
+			const user: IUser = await UserModel.findById(_id)
 			const isMatch = await user.comparePassword(oldPassword)
 			if (!isMatch) {
-				return res.status(401).json({ message: "Password is incorrect" })
+				return res.status(401).json({ currentPassword: "Password is incorrect" })
 			}
-			user.password = newPassword
+			user.Password = newPassword
 			const updatedUser: IUser = await user.save()
 			const userObj = updatedUser.toObject()
 			delete userObj.password

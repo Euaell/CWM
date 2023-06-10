@@ -39,7 +39,8 @@ interface IEndpoints {
 		login: string,
 		logout: string,
 		verify: string,
-		getCitiesAndUsages: string
+		getCitiesAndUsages: string,
+		changePassword: string
 	}
 }
 
@@ -74,7 +75,8 @@ export const ENDPOINTS: IEndpoints = {
 		login: "users/login",
 		logout: "users/logout",
 		verify: "users/verifyuser",
-		getCitiesAndUsages: "users/get-cities-usage"
+		getCitiesAndUsages: "users/get-cities-usage",
+		changePassword: "users/changepassword"
 	}
 }
 
