@@ -6,7 +6,7 @@ import configs from "../config/configs";
 export default class Authenticate {
 	static async authenticate(req: Request, res: Response, next: NextFunction) {
 		try {
-			const token = req.cookies.token || req.headers.token
+			const token = req.headers.token || req.cookies.token
 
 			if (!token) {
 				return res.status(401).json({ message: 'Unauthorized' })

@@ -83,23 +83,30 @@ export const ENDPOINTS: IEndpoints = {
 }
 
 export function apiEndpoint (endpoint: string) {
-	const url: string = `${BASE_URL}/${endpoint}`
+	const url = `${BASE_URL}/${endpoint}`
+
+	const user = JSON.parse(localStorage.getItem("user") || "{}")
+	const options = {
+		headers: {
+			token: user?.token
+		}
+	}
 
 	return {
 		get: async (id?: string) => {
 			if (id) {
-				return await api.get(`${url}/${id}`)
+				return await api.get(`${url}/${id}`, options)
 			}
 			return await api.get(url)
 		},
 		post: async (data: any) => {
-			return await api.post(url, data)
+			return await api.post(url, data, options)
 		},
 		put: async (id: string, data: any) => {
-			return await api.put(`${url}/${id}`, data)
+			return await api.put(`${url}/${id}`, data, options)
 		},
 		delete: async (id: string) => {
-			return await api.delete(`${url}/${id}`)
+			return await api.delete(`${url}/${id}`, options)
 		}
 	}
 }

@@ -36,6 +36,7 @@ export default function Login() : JSX.Element {
 						...data.user,
 						token: data.token
 					})
+
 					navigate("/")
 				})
 				.catch((error) => {

@@ -13,10 +13,10 @@ export default function Logout(): JSX.Element {
 		apiEndpoint(ENDPOINTS.user.logout)
 			.get()
 			.then(() => {
-				resetUser()
 				navigate('/')
 			})
 			.finally(() => {
+				resetUser()
 				setLoading(false)
 			})
 	}, [])
