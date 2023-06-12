@@ -111,7 +111,10 @@ export default function Bills(): JSX.Element {
 			title: "Payment Status",
 			dataIndex: "Paid",
 			key: "Paid",
-			render: (text: boolean) => <Tag color={text ? "green" : "volcano"}>{text ? "Paid" : "Unpaid"}</Tag>
+			render: (text: boolean) =>
+				<Tag color={text ? "green" : "volcano"} style={{ width: "50%", textAlign: "center", height: "30px", fontSize: "15px", lineHeight: "30px", fontWeight: 500 }}>
+					{text ? "Paid" : "Unpaid"}
+				</Tag>
 		}
 	]
 

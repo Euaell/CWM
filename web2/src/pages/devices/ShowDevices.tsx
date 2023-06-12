@@ -146,28 +146,6 @@ export function TableView(): JSX.Element {
 						>
 							Reset
 						</Button>
-						<Button
-							type="link"
-							size="small"
-							onClick={() => {
-								confirm({ closeDropdown: false });
-								setSearchText((selectedKeys as string[])[0]);
-								setSearchedColumn(dataIndex);
-							}}
-						>
-							Filter
-						</Button>
-
-						<Button
-							type="link"
-							size="small"
-							onClick={() => {
-								close();
-							}}
-						>
-							close
-						</Button>
-
 					</Space>
 				</div>
 			),
@@ -214,7 +192,11 @@ export function TableView(): JSX.Element {
 			dataIndex: 'Status',
 			key: "Status",
 			render: (_, record: any) => (
-				<Tag color={record.isActivated ? 'green' : 'volcano'} key={record._id}>
+				<Tag
+					color={record.isActivated ? 'green' : 'volcano'}
+					key={record._id}
+					style={{ width: "50%", textAlign: "center", height: "30px", fontSize: "15px", lineHeight: "30px", fontWeight: 500 }}
+				>
 					{record.isActivated ? 'Active' : 'Inactive'}
 				</Tag>
 			),

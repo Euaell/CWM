@@ -28,7 +28,7 @@ export default function ViewCustomers(): JSX.Element {
 	const [limit, setLimit] = React.useState(10);
 	const [total, setTotal] = React.useState(0);
 
-	function fetchCustomers(dataIndex: DataIndex | null = null, value: string | number | boolean | null = null, startOver: boolean = false) {
+	function fetchCustomers(dataIndex: DataIndex | null = null, value: string | number | boolean | null = null, startOver = false) {
 		setLoading(true)
 		apiEndpoint(ENDPOINTS.customers.getCustomers + `?limit=${limit}&page=${(startOver ? 1 : page)}` + (dataIndex ? `&${dataIndex}=${value}` : ''))
 			.get()
@@ -51,8 +51,8 @@ export default function ViewCustomers(): JSX.Element {
 
 	function handleSearch(selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) {
 		confirm();
-    	setSearchText(selectedKeys[0]);
-    	setSearchedColumn(dataIndex);
+		setSearchText(selectedKeys[0]);
+		setSearchedColumn(dataIndex);
 		fetchCustomers(dataIndex, selectedKeys[0], true)
 	}
 
@@ -93,28 +93,6 @@ export default function ViewCustomers(): JSX.Element {
 						>
 							Reset
 						</Button>
-						<Button
-							type="link"
-							size="small"
-							onClick={() => {
-								confirm({ closeDropdown: false });
-								setSearchText((selectedKeys as string[])[0]);
-								setSearchedColumn(dataIndex);
-							}}
-						>
-							Filter
-						</Button>
-
-						<Button
-							type="link"
-							size="small"
-							onClick={() => {
-								close();
-							}}
-						>
-							close
-						</Button>
-
 					</Space>
 				</div>
 			),
