@@ -7,7 +7,7 @@ export default class Authenticate {
 	static async authenticate(req: Request, res: Response, next: NextFunction) {
 		try {
 			const token = req.headers.token || req.cookies.token
-
+			console.log("token", token)
 			if (!token) {
 				return res.status(401).json({ message: 'Unauthorized' })
 			}

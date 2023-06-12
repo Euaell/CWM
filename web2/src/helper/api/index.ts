@@ -86,9 +86,11 @@ export function apiEndpoint (endpoint: string) {
 	const url = `${BASE_URL}/${endpoint}`
 
 	const user = JSON.parse(localStorage.getItem("user") || "{}")
+	const token = user.token || ""
+
 	const options = {
 		headers: {
-			token: user?.token
+			token
 		}
 	}
 
