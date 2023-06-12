@@ -1,10 +1,10 @@
 import React, { JSX, useEffect, useState } from "react";
 import type { ColumnsType } from 'antd/es/table';
-import {Button, DatePicker, InputNumber, message, Pagination, Table, Tag, Typography} from "antd";
+import { Button, DatePicker, InputNumber, message, Pagination, Table, Tag, Typography } from "antd";
 import { apiEndpoint, ENDPOINTS } from "../helper/api";
 import BillCharts from "../components/BillCharts.tsx";
 import dayjs from "dayjs";
-
+import Papa from 'papaparse'
 interface DataType {
   key: React.Key;
   name: string;
@@ -33,7 +33,6 @@ export default function Bills(): JSX.Element {
 				return response.data;
 			})
 			.then((data) => {
-				console.log(data);
 				setBill(data.bills)
 				setTotal(data.total)
 				messageApi.destroy()
@@ -51,8 +50,50 @@ export default function Bills(): JSX.Element {
 		setSelectedMonth(dateString)
 	}
 
+	function downloadCSV(doc: any) {
+		const csv = Papa.unparse(doc)
+
+		const file = new Blob([csv], {type: 'text/csv;charset=utf-8;'})
+		const link = document.createElement("a")
+		if (link.download !== undefined) {
+			const url = URL.createObjectURL(file)
+			link.setAttribute("href", url)
+			link.setAttribute("download", (selectedMonth != '' ? `Bills-${selectedMonth}` : 'Bills-Total') + ".csv")
+			link.style.visibility = 'hidden'
+			document.body.appendChild(link)
+			link.click()
+			document.body.removeChild(link)
+		}
+	}
+
 	function handleExport() {
-		messageApi.info("Exported successfully!")
+		messageApi.loading("Exporting...")
+		apiEndpoint(ENDPOINTS.bills.getBills + `?limit=${10000}&page=${1}` + (selectedMonth != '' ? `&selectedMonth=${selectedMonth}` : ''))
+			.get()
+			.then((response) => {
+				return response.data;
+			})
+			.then(async (data) => {
+				const doc: any = await Promise.all(data.bills.map(async (bill: any) => {
+					return {
+						Customer: bill.Customer.Name,
+						Phone: bill.Customer.Phone.toString(),
+						BilledDate: dayjs(bill.CreatedAt).format('DD/MM/YYYY'),
+						Amount: bill.Amount.toFixed(2),
+						Volume: bill.Volume.toFixed(2),
+						Rate: bill.Rate.toFixed(2),
+						Paid: bill.Paid ? 'Yes' : 'No',
+					}
+				}))
+
+				downloadCSV(doc)
+				messageApi.destroy()
+				messageApi.info("Exported successfully!")
+			})
+			.catch(error => {
+				console.log(error)
+				messageApi.error("Something went wrong!")
+			})
 	}
 
 	function handleGenerateBills() {

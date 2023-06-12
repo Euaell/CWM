@@ -134,7 +134,7 @@ export default function Flow({ InitialNodes, InitialEdges }: { InitialNodes: Arr
 					className="react-flow-node-toolbar-example"
 					nodeTypes={nodeTypes}
 					fitView
-					defaultEdgeOptions={{ animated: true, style: { stroke: '#0047AB', strokeWidth: '3.5' } }}
+					defaultEdgeOptions={{ animated: true, style: { stroke: '#0047AB', strokeWidth: '4.5' } }}
 					onConnect={onConnect}
 					onNodesDelete={onNodesDelete}
 					onEdgesDelete={onEdgesDelete}
