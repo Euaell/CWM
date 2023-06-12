@@ -1,6 +1,6 @@
 import React, { JSX, useEffect, useState } from "react";
 import type { ColumnsType } from 'antd/es/table';
-import { Button, DatePicker, InputNumber, message, Pagination, Table, Typography } from "antd";
+import {Button, DatePicker, InputNumber, message, Pagination, Table, Tag, Typography} from "antd";
 import { apiEndpoint, ENDPOINTS } from "../helper/api";
 import BillCharts from "../components/BillCharts.tsx";
 import dayjs from "dayjs";
@@ -23,7 +23,6 @@ export default function Bills(): JSX.Element {
 	const [total, setTotal] = useState(0)
 	const [page, setPage] = useState(1)
 	const [limit, setLimit] = useState(10)
-
 
 	function fetchBills(dataIndex: DataIndex | null = null, value: string | number | boolean | null = null, startOver = false) {
 		messageApi.loading("Loading...")
@@ -72,13 +71,15 @@ export default function Bills(): JSX.Element {
 	const columns : ColumnsType<DataType> = [
 		{
 			title: "Customer Name",
-			dataIndex: "Name",
-			key: "Name"
+			dataIndex: "Customer.Name",
+			key: "Name",
+			render: (_: string, record: any) => record.Customer.Name
 		},
 		{
 			title: "Customer Phone",
-			dataIndex: "Phone",
-			key: "Phone"
+			dataIndex: "Customer.Phone",
+			key: "Phone",
+			render: (_: string, record: any) => record.Customer.Phone
 		},
 		{
 			title: "Total Amount",
@@ -87,8 +88,9 @@ export default function Bills(): JSX.Element {
 		},
 		{
 			title: "Due Date",
-			dataIndex: "createdAt",
-			key: "createdAt"
+			dataIndex: "CreatedAt",
+			key: "CreatedAt",
+			render: (text: string) => dayjs(text).add(2, 'month').format('DD/MM/YYYY')
 		},
 		{
 			title: "Volume",
@@ -98,7 +100,8 @@ export default function Bills(): JSX.Element {
 		{
 			title: "Payment Status",
 			dataIndex: "Paid",
-			key: "Paid"
+			key: "Paid",
+			render: (text: boolean) => <Tag color={text ? "green" : "volcano"}>{text ? "Paid" : "Unpaid"}</Tag>
 		}
 	]
 
@@ -144,7 +147,7 @@ export default function Bills(): JSX.Element {
 					loading={loading}
 					dataSource={bill}
 					rowKey={(record: any) => record._id}
-					pagination={{ pageSize: 10 }}
+					pagination={false}
 					scroll={{ y: 240 }}
 				/>
 

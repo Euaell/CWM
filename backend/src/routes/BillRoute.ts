@@ -7,6 +7,7 @@ const router = Router()
 
 router.post("/create", Authenticate.authenticate, BillController.create)
 router.post("/test", BillController.testCreateBills)
+router.put("/test", BillController.testUpdateBills)
 
 router.get("/", Authenticate.authenticate, BillController.getAll)
 router.get("/get-chart-data", Authenticate.authenticate, BillController.getBillChartData)

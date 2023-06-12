@@ -2,12 +2,21 @@ import { Request, Response, NextFunction } from "express"
 import BillModel, { IBill } from "../models/BillModel"
 import CustomerModel, { ICustomer } from "../models/CustomerModel";
 
+const OverdueDays: number = 60 * 24 * 60 * 60 * 1000 // 60 days in milliseconds
+
 export default class BillController {
 	static async getAll(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
-			const { limit, page } = req.query
+			const { limit, page, selectedMonth } = req.query
+			let query: any = {}
+			if (selectedMonth) {
+				const se: number = parseInt(selectedMonth as string)
+				console.log(se)
+			}
+
 			const total: number = await BillModel.countDocuments()
-			const bills: IBill[] = await BillModel.find().limit(parseInt(limit as string)).skip((parseInt(page as string) - 1) * parseInt(limit as string)).populate('Customer', '-__v -Password -Device -createdAt -updatedAt')
+			const bills: IBill[] = await BillModel.find().populate('Customer', '-__v')
+				.limit(parseInt(limit as string)).skip((parseInt(page as string) - 1) * parseInt(limit as string))
 			return res.status(200).json({ bills, total })
 		} catch (error) {
 			next(error)
@@ -82,7 +91,7 @@ export default class BillController {
 
 	static async getBillChartData(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
-			const bills: IBill[] = await BillModel.find()
+			const bills: IBill[] = await BillModel.find().populate('Customer', '-__v')
 			let Paid: number = 0
 			let Unpaid: number = 0
 			let Overdue: number = 0
@@ -91,7 +100,7 @@ export default class BillController {
 					Paid++
 				} else {
 					// check if the bill is overdue( 60 days after the bill is created)
-					if (bill.CreatedAt.getTime() + 60 * 24 * 60 * 60 * 1000 < Date.now()) {
+					if (bill.CreatedAt.getTime() + OverdueDays < Date.now()) {
 						Overdue++
 					} else {
 						Unpaid++
@@ -169,4 +178,14 @@ export default class BillController {
 		}
 	}
 
+	static async testUpdateBills(req: Request, res: Response) {
+		try {
+			// update all bills customer property to the same customer
+			const { Customer } = req.body
+			await BillModel.updateMany({}, { Customer })
+			return res.status(200).json({ message: "bills updated" })
+		} catch (error) {
+			return res.status(500).json({ message: error.message })
+		}
+	}
 }
