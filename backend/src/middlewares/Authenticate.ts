@@ -8,7 +8,7 @@ export default class Authenticate {
 		try {
 			const token = req.headers.token || req.cookies.token
 			console.log("token", token)
-			if (!token) {
+			if (!token || Array.isArray(token)) {
 				return res.status(401).json({ message: 'Unauthorized' })
 			}
 			const decoded = jwt.verify(token, configs.JWT_SECRET)

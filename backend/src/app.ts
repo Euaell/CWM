@@ -14,13 +14,14 @@ const app = express()
 const accessLogStream: WriteStream = createWriteStream(join(__dirname, "access.log"), { flags: "a" })
 
 app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
+app.use(cookieParser())
+
 app.use(cors({
 	origin: true,
 	credentials: true,
 	exposedHeaders: ["token"]
 }))
-app.use(express.json())
-app.use(cookieParser())
 
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"))
 
