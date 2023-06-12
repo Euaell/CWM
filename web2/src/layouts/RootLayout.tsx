@@ -9,9 +9,9 @@ import {
 import type { MenuProps } from 'antd';
 
 import {  Layout, Menu, theme, Typography } from 'antd';
-import {NavigateFunction, Outlet, useNavigate} from "react-router-dom";
-import {IUser} from "../helper/UserProvider.tsx";
-import {useAuth} from "../helper/useAuth.ts";
+import { NavigateFunction, Outlet, useNavigate } from "react-router-dom";
+import { IUser } from "../helper/UserProvider.tsx";
+import { useAuth } from "../helper/useAuth.ts";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -37,11 +37,7 @@ function getItem(
 
 export default function RootLayout (): JSX.Element {
 	const { user } : { user: IUser } = useAuth()
-
 	const [collapsed, setCollapsed] = useState(false);
-	const {
-		token: { colorBgContainer },
-	} = theme.useToken();
 
 	return (
 		<Layout style={{ minWidth: "100dvw", minHeight: "100dvh" }}>
