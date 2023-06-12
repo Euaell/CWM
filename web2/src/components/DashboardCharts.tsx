@@ -25,6 +25,7 @@ export function UsageByCity(): JSX.Element {
 	const [usageData, setUsageData] = useState<Array<number>>([])
 	const [cityData, setCityData] = useState<Array<string>>([])
 
+	console.log(usageData, cityData)
 	useEffect(() => {
 		apiEndpoint(ENDPOINTS.user.getCitiesAndUsages)
 			.get()
