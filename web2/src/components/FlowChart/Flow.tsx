@@ -43,7 +43,7 @@ export default function Flow({ InitialNodes, InitialEdges }: { InitialNodes: Arr
 		event.dataTransfer.dropEffect = 'move';
 	}, [])
 
-	const handleNodeDragStop = useCallback((event: any, node: any) => {
+	const handleNodeDragStop = useCallback((_: any, node: any) => {
 		const id = node.id
 		const Position = node.position
 		apiEndpoint(ENDPOINTS.devices.updateDevice)
@@ -68,11 +68,15 @@ export default function Flow({ InitialNodes, InitialEdges }: { InitialNodes: Arr
 
 	const onDrop = useCallback((event: any) => {
 			event.preventDefault();
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
 			const id = event.dataTransfer.getData('application/reactflow');
 
 			if (typeof id === 'undefined' || !id) return;
 
+			// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+			// @ts-ignore
 			const position = reactFlowInstance.project({
 				x: event.clientX - reactFlowBounds.left,
 				y: event.clientY - reactFlowBounds.top,
@@ -114,6 +118,7 @@ export default function Flow({ InitialNodes, InitialEdges }: { InitialNodes: Arr
 			.put("", {})
 	}, [setEdges])
 
+
 	return (
 		<ReactFlowProvider>
 			<div style={{ margin: 8, width: '70dvw', height: '60dvh', background: "#f8faff", borderRadius: '15px', border: '1px solid #0f0600'}} ref={reactFlowWrapper}>
@@ -123,7 +128,8 @@ export default function Flow({ InitialNodes, InitialEdges }: { InitialNodes: Arr
 					onNodesChange={onNodesChange}
 					edges={edges}
 					onEdgesChange={onEdgesChange}
-
+					// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+					// @ts-ignore
 					onInit={setReactFlowInstance}
 					className="react-flow-node-toolbar-example"
 					nodeTypes={nodeTypes}

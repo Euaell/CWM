@@ -33,7 +33,8 @@ interface IEndpoints {
 		getBillByID: string,
 		getBillChartData: string,
 		getBillChardDataByYear: string,
-		getUsageDataByYear: string
+		getUsageDataByYear: string,
+		createBills: string
 	},
 	user: {
 		login: string,
@@ -69,7 +70,8 @@ export const ENDPOINTS: IEndpoints = {
 		getBillByID: "bills",
 		getBillChartData: "bills/get-chart-data",
 		getBillChardDataByYear: "bills/get-chart-yearly-data",
-		getUsageDataByYear: "bills/get-yearly-usage-data"
+		getUsageDataByYear: "bills/get-yearly-usage-data",
+		createBills: "bills/create"
 	},
 	user: {
 		login: "users/login",

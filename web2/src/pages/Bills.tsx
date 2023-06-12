@@ -56,7 +56,18 @@ export default function Bills(): JSX.Element {
 	}
 
 	function handleGenerateBills() {
-		console.log(rate)
+		apiEndpoint(ENDPOINTS.bills.createBills)
+			.post({ Rate: rate })
+			.then((response) => {
+				return response.data;
+			})
+			.then((data) => {
+				messageApi.success(data.bills.length + " Bills generated!", 5)
+			})
+			.catch(error => {
+				console.log(error)
+				messageApi.error("Something went wrong!")
+			})
 	}
 
 	useEffect(() => {

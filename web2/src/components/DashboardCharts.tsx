@@ -32,6 +32,7 @@ export function UsageByCity(): JSX.Element {
 				return response.data
 			})
 			.then((data) => {
+				console.log(data)
 				setCityData(data.cities)
 				setUsageData(data.usages)
 			})
@@ -168,7 +169,7 @@ export function UsersAndRevenueStat(): JSX.Element {
 	const formatter: any = (value: number) => <CountUp end={value} duration={5} separator="," />;
 
 	return (
-		<div style={{width: "30%", display: "inline-block", margin: 10}} >
+		<div style={{width: "40%", display: "inline-block", margin: 10, marginLeft: 20}} >
 			<Row gutter={16}>
 				<Col span={12}>
 					<Statistic title="Customers" value={customers} formatter={formatter} />
