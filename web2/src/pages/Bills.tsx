@@ -27,7 +27,7 @@ export default function Bills(): JSX.Element {
 	function fetchBills(dataIndex: DataIndex | null = null, value: string | number | boolean | null = null, startOver = false) {
 		messageApi.loading("Loading...")
 		setLoading(true)
-		apiEndpoint(ENDPOINTS.bills.getBills + `?limit=${limit}&page=${(startOver ? 1 : page)}` + (selectedMonth != '' ? `&month=${selectedMonth}` : '') + (dataIndex ? `&${dataIndex}=${value}` : ''))
+		apiEndpoint(ENDPOINTS.bills.getBills + `?limit=${limit}&page=${(startOver ? 1 : page)}` + (selectedMonth != '' ? `&selectedMonth=${selectedMonth}` : '') + (dataIndex ? `&${dataIndex}=${value}` : ''))
 			.get()
 			.then((response) => {
 				return response.data;
@@ -49,7 +49,6 @@ export default function Bills(): JSX.Element {
 
 	function handleMonthChange(_: any, dateString: string) {
 		setSelectedMonth(dateString)
-		fetchBills(null, null, true)
 	}
 
 	function handleExport() {
@@ -66,7 +65,7 @@ export default function Bills(): JSX.Element {
 		return () => {
 			setBill([])
 		}
-	}, [limit, page])
+	}, [limit, page, selectedMonth])
 
 	const columns : ColumnsType<DataType> = [
 		{
@@ -121,6 +120,7 @@ export default function Bills(): JSX.Element {
 			<div style={{ margin: 20 }}>
 				<div style={{ display: "flex", justifyContent: "space-between" }}>
 					<DatePicker
+						value={selectedMonth ? dayjs(selectedMonth) : null}
 						onChange={handleMonthChange}
 						placeholder="Select month"
 						picker="month"

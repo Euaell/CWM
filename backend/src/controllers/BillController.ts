@@ -10,12 +10,14 @@ export default class BillController {
 			const { limit, page, selectedMonth } = req.query
 			let query: any = {}
 			if (selectedMonth) {
-				const se: number = parseInt(selectedMonth as string)
-				console.log(se)
+				const date: Date = new Date(selectedMonth as string)
+				const firstDay: Date = new Date(date.getFullYear(), date.getMonth(), 1)
+				const lastDay: Date = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+				query = { CreatedAt: { $gte: firstDay, $lte: lastDay } }
 			}
 
-			const total: number = await BillModel.countDocuments()
-			const bills: IBill[] = await BillModel.find().populate('Customer', '-__v')
+			const total: number = await BillModel.countDocuments(query)
+			const bills: IBill[] = await BillModel.find(query).populate('Customer', '-__v')
 				.limit(parseInt(limit as string)).skip((parseInt(page as string) - 1) * parseInt(limit as string))
 			return res.status(200).json({ bills, total })
 		} catch (error) {

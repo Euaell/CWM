@@ -42,7 +42,6 @@ export function UsageByCity(): JSX.Element {
 
 	const data = {
 		// labels: cityData,
-		// Ethiopian cities
 		labels: [ 'Dire Dawa', 'Mekelle', 'Gondar', 'Adama', 'Bahir Dar', 'Awasa', 'Jimma', 'Debre Markos', 'Kombolcha', 'Addis Ababa' ],
 		datasets: [
 			{
