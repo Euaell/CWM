@@ -3,7 +3,6 @@ import UserModel, {IUser, roleEnum} from "../models/UserModel";
 import DeviceModel, {IDevice} from "../models/DeviceModel";
 import CustomerModel, {ICustomer} from "../models/CustomerModel";
 
-
 export default class UserController {
 	static async createUser(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {

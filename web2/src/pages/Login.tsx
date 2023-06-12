@@ -4,7 +4,7 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons"
 import useForm from "../helper/useForm.ts";
 import { apiEndpoint, ENDPOINTS } from "../helper/api";
 import { useAuth } from "../helper/useAuth.ts";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography
 
@@ -50,7 +50,7 @@ export default function Login() : JSX.Element {
 	}
 
 	function validate() {
-		let temp: ILoginModel = {
+		const temp: ILoginModel = {
 			Email: values.Email ? "" : "Email is required",
 			Password: values.Password ? "" : "Password is required"
 		}

@@ -1,5 +1,5 @@
 import { Typography } from "antd";
-import {UsageByCity, UsageYearly, UsersAndRevenueStat} from "../components/DashboardCharts.tsx";
+import { UsageByCity, UsageYearly, UsersAndRevenueStat } from "../components/DashboardCharts.tsx";
 
 export default function Home(): JSX.Element {
 
