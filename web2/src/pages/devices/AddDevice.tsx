@@ -62,7 +62,7 @@ export default function AddDevice(): JSX.Element {
 	}
 
 	function validate() {
-		let temp: IAddDevice = {
+		const temp: IAddDevice = {
 			City: values.City ? "" : "City is required",
 			Address: values.Address ? "" : "Address is required",
 			Label: values.Label ? "" : "Label is required"
@@ -89,9 +89,10 @@ export default function AddDevice(): JSX.Element {
 					<Typography.Title level={3}> Add Device </Typography.Title>
 				</Form.Item>
 
-				<Form.Item label="Label"
-						   validateStatus={errors.Label ? "error" : "success"}
-						   help={errors.Label}
+				<Form.Item
+					label="Label"
+					validateStatus={errors.Label ? "error" : "success"}
+					help={errors.Label}
 				>
 					<Input
 						size="large"
@@ -103,15 +104,18 @@ export default function AddDevice(): JSX.Element {
 				</Form.Item>
 				<Row gutter={12}>
 					<Col span={12}>
-						<Form.Item label="City"
-								   validateStatus={errors.City ? "error" : "success"}
-								   help={errors.City}
+						<Form.Item
+							label="City"
+							validateStatus={errors.City ? "error" : "success"}
+							help={errors.City}
 						>
 							<Select
 								mode="tags"
 								size="large"
 								value={city}
 								onChange={handleCityChange}
+								// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+								// @ts-ignore
 								options={cityOptions}
 								placeholder="Choose city"
 							/>
@@ -119,9 +123,10 @@ export default function AddDevice(): JSX.Element {
 					</Col>
 
 					<Col span={12}>
-						<Form.Item label="Address"
-								   validateStatus={errors.Address ? "error" : "success"}
-								   help={errors.Address}
+						<Form.Item
+							label="Address"
+							validateStatus={errors.Address ? "error" : "success"}
+							help={errors.Address}
 						>
 							<Input
 								size="large"
