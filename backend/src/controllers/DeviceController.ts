@@ -8,10 +8,12 @@ export default class DeviceController {
 		try {
 			const { isActivated, type, Address, City } = req.query
 
-			const query: any = { isActivated: true }
+			const query: any = { }
 			if (isActivated !== undefined) {
 				if (isActivated === "false")
 					query['isActivated'] = false
+				else if (isActivated === "true")
+					query['isActivated'] = true
 			}
 
 			if (type !== undefined && type !== "all") {
@@ -74,11 +76,11 @@ export default class DeviceController {
 				}
 			}
 
+			device.FlowRate = flow
+			await device.save()
 			if (device.State === deviceStateEnum.close) {
 				return res.status(200).json({ message: deviceStateEnum.close })
 			}
-			device.FlowRate = flow
-			await device.save()
 
 			return res.status(200).json({ message: deviceStateEnum.open })
 

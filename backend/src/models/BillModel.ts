@@ -51,6 +51,11 @@ const BillSchema: Schema<IBill> = new Schema<IBill>(
 			enum: Object.values(billingPeriodEnum),
 			required: true,
 			default: billingPeriodEnum.monthly
+		},
+		CreatedAt: {
+			type: Date,
+			required: true,
+			default: Date.now
 		}
 	},
 	{

@@ -1,14 +1,14 @@
-import React, {JSX, useEffect, useRef, useState} from "react";
+import React, { JSX, useEffect, useRef, useState } from "react";
 import { apiEndpoint, ENDPOINTS } from "../../helper/api";
 import Loading from "../../components/Loading.tsx";
-import {Button, Input, InputRef, Layout, Menu, message, Pagination, Popover, QRCode, Space, Table} from "antd";
+import {Button, Input, InputRef, Layout, Menu, message, Pagination, Popover, QRCode, Space, Table, Tag} from "antd";
 import type { MenuProps } from "antd";
 import { Outlet, useNavigate } from "react-router-dom";
 import Flow from "../../components/FlowChart/Flow.tsx";
 import { SearchOutlined } from '@ant-design/icons';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
-import {ColumnsType, ColumnType} from "antd/es/table";
+import { ColumnsType, ColumnType } from "antd/es/table";
 
 interface DataType {
   key: React.Key;
@@ -50,17 +50,18 @@ export default function ShowDevices(): JSX.Element {
 	return (
 		<Layout>
 			<Header style={{ backgroundColor: "white" }}>
-				<Menu theme="light"
-					  mode="horizontal"
-					  defaultSelectedKeys={["/show-devices"]}
-					  items={items}
-					  onClick={handleMenuClick}
-					  selectedKeys={[window.location.pathname]}
+				<Menu 
+					theme="light"
+					mode="horizontal"
+					defaultSelectedKeys={["/show-devices"]}
+					items={items}
+					onClick={handleMenuClick}
+					selectedKeys={[window.location.pathname]}
 				/>
 			</Header>
 
 			<Content style={{ padding: 5 }}>
-				 <Outlet />
+				<Outlet />
 			</Content>
 		</Layout>
 	)
@@ -78,9 +79,11 @@ export function TableView(): JSX.Element {
 	const [limit, setLimit] = React.useState(10);
 	const [total, setTotal] = React.useState(0);
 
-	function fetchDevices(dataIndex: DataIndex | null = null, value: string | number | boolean | null = null, startOver: boolean = false) {
+	const [isActivated, setIsActivated] = React.useState<string>("");
+
+	function fetchDevices(dataIndex: DataIndex | null = null, value: string | number | boolean | null = null, startOver = false) {
 		setLoading(true)
-		apiEndpoint(ENDPOINTS.devices.getDevices + `?limit=${limit}&page=${(startOver ? 1 : page)}` + (dataIndex ? `&${dataIndex}=${value}` : ''))
+		apiEndpoint(ENDPOINTS.devices.getDevices + `?limit=${limit}&page=${(startOver ? 1 : page)}` + (dataIndex ? `&${dataIndex}=${value}` : '') + (isActivated && (isActivated === 'true' ? `&isActivated=${true}` : `&isActivated=${false}`)))
 			.get()
 			.then((response) => {
 				return response.data
@@ -101,8 +104,8 @@ export function TableView(): JSX.Element {
 
 	function handleSearch(selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) {
 		confirm();
-    	setSearchText(selectedKeys[0]);
-    	setSearchedColumn(dataIndex);
+		setSearchText(selectedKeys[0]);
+		setSearchedColumn(dataIndex);
 		fetchDevices(dataIndex, selectedKeys[0], true)
 	}
 
@@ -192,12 +195,17 @@ export function TableView(): JSX.Element {
 	function downloadQRCode(_id: string) {
 		const canvas = document.getElementById(_id)?.querySelector('canvas') as HTMLCanvasElement
 		const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-		let downloadLink = document.createElement("a");
+		const downloadLink = document.createElement("a");
 		downloadLink.href = pngUrl;
 		downloadLink.download = _id + ".png";
 		document.body.appendChild(downloadLink);
 		downloadLink.click();
 		document.body.removeChild(downloadLink);
+	}
+
+	function handleStatusFilter(value: boolean) {
+		console.log(value)
+		setIsActivated(value.toString())
 	}
 
 	const columns: ColumnsType<DataType> = [
@@ -206,8 +214,26 @@ export function TableView(): JSX.Element {
 			dataIndex: 'Status',
 			key: "Status",
 			render: (_, record: any) => (
-				<span>{record.isActivated ? 'Active' : 'Inactive'}</span>
-			)
+				<Tag color={record.isActivated ? 'green' : 'volcano'} key={record._id}>
+					{record.isActivated ? 'Active' : 'Inactive'}
+				</Tag>
+			),
+			filters: [
+				{
+					text: 'Active',
+					value: true,
+				},
+				{
+					text: 'Inactive',
+					value: false,
+				}
+			],
+			onFilter: (value: any, record: any) => {
+				handleStatusFilter(value)
+				return record.isActivated === value
+			},
+			defaultFilteredValue: ( isActivated === '' ?  [] : (isActivated === 'true' ? [true] : [false])),
+			filterMultiple: false
 		},
 		{
 			title: 'City',
@@ -258,7 +284,7 @@ export function TableView(): JSX.Element {
 		return () => {
 			setDevices([])
 		}
-	}, [limit, page])
+	}, [limit, page, isActivated])
 
 	if (loading) return <Loading />
 

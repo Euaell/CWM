@@ -8,6 +8,9 @@ export default function Home(): JSX.Element {
 			<Typography.Title level={1} style={{ marginBottom: 0}}>
 				Statistics
 			</Typography.Title>
+
+			<UsersAndRevenueStat />
+
 			<div>
 				{/* Usage by City */}
 				<UsageByCity />
@@ -15,7 +18,6 @@ export default function Home(): JSX.Element {
 				{/* Usage by Year */}
 				<UsageYearly />
 
-				<UsersAndRevenueStat />
 			</div>
 		</div>
 	)

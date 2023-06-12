@@ -1,6 +1,6 @@
 import React, { JSX, useEffect, useState } from "react";
 import type { ColumnsType } from 'antd/es/table';
-import {Button, DatePicker, InputNumber, message, Pagination, Table, Typography} from "antd";
+import { Button, DatePicker, InputNumber, message, Pagination, Table, Typography } from "antd";
 import { apiEndpoint, ENDPOINTS } from "../helper/api";
 import BillCharts from "../components/BillCharts.tsx";
 import dayjs from "dayjs";
@@ -25,7 +25,7 @@ export default function Bills(): JSX.Element {
 	const [limit, setLimit] = useState(10)
 
 
-	function fetchBills(dataIndex: DataIndex | null = null, value: string | number | boolean | null = null, startOver: boolean = false) {
+	function fetchBills(dataIndex: DataIndex | null = null, value: string | number | boolean | null = null, startOver = false) {
 		messageApi.loading("Loading...")
 		setLoading(true)
 		apiEndpoint(ENDPOINTS.bills.getBills + `?limit=${limit}&page=${(startOver ? 1 : page)}` + (selectedMonth != '' ? `&month=${selectedMonth}` : '') + (dataIndex ? `&${dataIndex}=${value}` : ''))

@@ -90,8 +90,8 @@ export default class BillController {
 				if (bill.Paid) {
 					Paid++
 				} else {
-					// check if the bill is overdue( 15 days after the bill is created)
-					if (bill.CreatedAt.getTime() + 15 * 24 * 60 * 60 * 1000 < Date.now()) {
+					// check if the bill is overdue( 60 days after the bill is created)
+					if (bill.CreatedAt.getTime() + 60 * 24 * 60 * 60 * 1000 < Date.now()) {
 						Overdue++
 					} else {
 						Unpaid++
@@ -144,4 +144,29 @@ export default class BillController {
 			next(error)
 		}
 	}
+
+	static async testCreateBills(req: Request, res: Response) {
+		try {
+			const { Rate, Volume, Customer, Amount, Paid, CreatedAt } = req.body
+			// a random number between 5 - 15
+			let rand: number;
+			if (Paid) {
+				// 50 - 75
+				rand = Math.floor(Math.random() * 16) + 10
+			}
+			else {
+				// 5 - 15
+				rand = Math.floor(Math.random() * 11) + 5
+			}
+
+			for (let i = 0; i < rand; i++) {
+				await BillModel.create({ Rate, Volume, Customer, Amount, Paid, CreatedAt })
+			}
+			const bill: IBill = await BillModel.create({ Rate, Volume, Customer, Amount, Paid, CreatedAt })
+			return res.status(201).json({ message: "bills Created" })
+		} catch (error) {
+			return res.status(500).json({ message: error.message })
+		}
+	}
+
 }

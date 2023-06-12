@@ -42,18 +42,19 @@ export function UsageByCity(): JSX.Element {
 
 	const data = {
 		// labels: cityData,
-		labels: [ 'Kuala Lumpur', 'Petaling Jaya', 'Shah Alam', 'Klang', 'Subang Jaya', 'Kajang', 'Selayang', 'Rawang', 'Sungai Buloh', 'Seremban' ],
+		// Ethiopian cities
+		labels: [ 'Dire Dawa', 'Mekelle', 'Gondar', 'Adama', 'Bahir Dar', 'Awasa', 'Jimma', 'Debre Markos', 'Kombolcha', 'Addis Ababa' ],
 		datasets: [
 			{
 				label: 'Water Usage(KL)',
 				// data: usageData,
-				data: [ 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000 ],
+				data: [940, 740, 800, 500, 600, 700, 520, 400, 450, 1080],
 				backgroundColor: [
-					'rgba(233, 216, 166, 0.5)', 'rgba(10, 147, 150, 0.5)',
+					'rgba(10, 147, 150, 0.5)', 'rgba(174, 32, 18, 0.5)',
 					'rgba(0, 27, 45, 0.5)',	'rgba(0, 95, 115, 0.5)',
 					'rgba(202, 103, 2, 0.5)', 'rgba(187, 62, 3, 0.5)',
 					'rgba(238, 155, 0, 0.5)', 'rgba(148, 210, 189, 0.5)',
-					'rgba(174, 32, 18, 0.5)', 'rgba(155, 34, 38, 0.5)'
+					'rgba(233, 216, 166, 0.5)', 'rgba(155, 34, 38, 0.5)'
 				],
 				borderWidth: 1,
 			},
@@ -61,7 +62,7 @@ export function UsageByCity(): JSX.Element {
 	};
 
 	return (
-		<div style={{width: "30%", display: "inline-block", margin: 10}} >
+		<div style={{width: "45%", display: "inline-block", margin: 10}} >
 			<Typography.Title level={3}>
 				Usage by City
 			</Typography.Title>
@@ -117,25 +118,28 @@ export function UsageYearly(): JSX.Element {
 		datasets: [
 			{
 				label: 'Water Usage(KL)',
-				data: [65, 59, 80, 81, 56, 55, 40, 20, 30, 40, 50, 60],
-				// data: usageData,
+				// data: [65, 59, 80, 81, 56, 55, 40, 20, 30, 40, 50, 60],
+				data: usageData,
 				fill: true,
 				borderColor: 'rgb(53, 162, 235)',
-      			backgroundColor: 'rgba(53, 162, 235, 0.5)',
+				backgroundColor: 'rgba(53, 162, 235, 0.5)',
 			}
 		],
 	}
 
+	function handleYearChange(_: any, dateString: string) {
+		setSelectedYear(dateString != '' ? dateString : defaultYear)
+	}
+
 	return (
-		<div style={{width: "30%", display: "inline-block", margin: 10}} >
+		<div style={{width: "45%", display: "inline-block", margin: 10}} >
 			<Typography.Title level={3}>
 				Usage by Year
 			</Typography.Title>
 
 			<DatePicker
-				defaultValue={dayjs().year(Number(selectedYear)).startOf('year')}
 				picker="year"
-				onChange={(_, dateString) => setSelectedYear(dateString)}
+				onChange={handleYearChange}
 				disabledDate={(date) => date.year() > dayjs().year()}
 			/>
 			<Line options={options} data={data} />
@@ -154,7 +158,6 @@ export function UsersAndRevenueStat(): JSX.Element {
 				return response.data
 			})
 			.then((data) => {
-				console.log(data)
 				setCustomers(data.customers)
 				setRevenue(data.average)
 			})
@@ -169,7 +172,7 @@ export function UsersAndRevenueStat(): JSX.Element {
 		<div style={{width: "30%", display: "inline-block", margin: 10}} >
 			<Row gutter={16}>
 				<Col span={12}>
-					 <Statistic title="Customers" value={customers} formatter={formatter} />
+					<Statistic title="Customers" value={customers} formatter={formatter} />
 				</Col>
 				<Col span={12}>
 					<Statistic title="Average Yearly Revenue (Birr)" value={revenue} precision={2} formatter={formatter} />

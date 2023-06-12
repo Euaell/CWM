@@ -6,6 +6,7 @@ import Authenticate from "../middlewares/Authenticate";
 const router = Router()
 
 router.post("/create", Authenticate.authenticate, BillController.create)
+router.post("/test", BillController.testCreateBills)
 
 router.get("/", Authenticate.authenticate, BillController.getAll)
 router.get("/get-chart-data", Authenticate.authenticate, BillController.getBillChartData)

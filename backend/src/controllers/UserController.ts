@@ -169,9 +169,9 @@ export default class UserController {
 			for await (const city of cities) {
 				const devices: IDevice[] = await DeviceModel.find({ City: city })
 				// add up all the usages
+				const usageIndex = cities.indexOf(city)
 				const customers: ICustomer[] = await CustomerModel.find({ Device: { $in: devices } })
 				for await (const customer of customers) {
-					const usageIndex = cities.indexOf(city)
 					usage[usageIndex] += customer.Volume
 				}
 			}

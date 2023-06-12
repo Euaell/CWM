@@ -29,8 +29,8 @@ export default function BillCharts(): JSX.Element {
 		datasets: [
 			{
 				label: '# of Bills',
-				data: [12, 19, 3],
-				// data: billData,
+				// data: [12, 19, 3],
+				data: billData,
 				backgroundColor: [
 					'rgba(255, 99, 132, 0.6)',
 					'rgba(54, 162, 235, 0.6)',
@@ -72,7 +72,8 @@ function YearlyBarChart(): JSX.Element {
 				return response.data
 			})
 			.then((data) => {
-				console.log(data)
+				setPaid(data.paid)
+				setUnpaid(data.unpaid)
 			})
 			.catch(error => {
 				console.log(error)
@@ -107,16 +108,16 @@ function YearlyBarChart(): JSX.Element {
 		datasets: [
 			{
 				label: 'Unpaid',
-				data: [65, 59, 80, 81, 56, 55, 40, 59, 80, 81, 56, 55],
-				// data: unpaid,
+				// data: [65, 59, 80, 81, 56, 55, 40, 59, 80, 81, 56, 55],
+				data: unpaid,
 				backgroundColor: 'rgba(255, 99, 132, 0.5)',
 				borderColor: 'rgb(255, 99, 132)',
 				borderWidth: 1,
 			},
 			{
 				label: 'Paid',
-				data: [28, 48, 40, 19, 86, 27, 90, 40, 19, 86, 27, 90],
-				// data: paid,
+				// data: [28, 48, 40, 19, 86, 27, 90, 40, 19, 86, 27, 90],
+				data: paid,
 				backgroundColor: 'rgba(54, 162, 235, 0.5)',
 				borderColor: 'rgb(54, 162, 235)',
 				borderWidth: 1,
