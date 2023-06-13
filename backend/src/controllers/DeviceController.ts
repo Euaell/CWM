@@ -58,7 +58,7 @@ export default class DeviceController {
 	static async read(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
 			const { id } = req.params
-			const { flow, volume } = req.body
+			const { flow, volume }: { flow: number, volume: number } = req.body
 
 			const device: IDevice = await DeviceModel.findById(id)
 			if (!device) {

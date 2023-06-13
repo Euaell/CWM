@@ -10,7 +10,7 @@ const CustomNode = memo((props: any) => {
 	function handleQRCode() {
 		const canvas = document.getElementById(props.id)?.querySelector('canvas') as HTMLCanvasElement
 		const pngUrl = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-		let downloadLink = document.createElement("a");
+		const downloadLink = document.createElement("a");
 		downloadLink.href = pngUrl;
 		downloadLink.download = props.id + ".png";
 		document.body.appendChild(downloadLink);
@@ -32,9 +32,10 @@ const CustomNode = memo((props: any) => {
 			})
 	}
 	return (
-		<div style={{ backgroundColor: "lightblue", borderRadius: 8, padding: 10, width: 70 }}
-			 onMouseOver={() => setData({...data, toolbarVisible: true})}
-			 onMouseLeave={() => setData({...data, toolbarVisible: false})}
+		<div
+			style={{ backgroundColor: "lightblue", borderRadius: 8, padding: 10, width: 70 }}
+			onMouseOver={() => setData({...data, toolbarVisible: true})}
+			onMouseLeave={() => setData({...data, toolbarVisible: false})}
 		>
 			<NodeToolbar
 				isVisible={data.toolbarVisible}
