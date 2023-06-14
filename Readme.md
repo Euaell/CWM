@@ -69,3 +69,29 @@ The software is written in Node.js and uses MongoDB as a database. The software 
 5. React Flow
 6. Ant Design
 7. React Chart.js 2
+
+
+## Hardware
+The software is designed to run on an ESP32 microcontroller. The ESP32 microcontroller is a low-cost microcontroller
+that has built-in Wi-Fi and Bluetooth. The ESP32 microcontroller is used to collect data from the water supply using 
+sensors. The ESP32 microcontroller is also used to control the water flow.
+
+#### ESP32 Setup
+To setup the ESP32 microcontroller, you need to install the Arduino IDE. You can install the Arduino IDE from [here](https://www.arduino.cc/en/software).
+After installing the Arduino IDE, you need to install the ESP32 board. You can install the ESP32 board by following the instructions
+[here](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/).
+
+After installing the ESP32 board, you need to install the libraries used in the project. You can install the libraries by following the instructions
+[here](https://www.arduino.cc/en/guide/libraries).
+- The libraries used in the project are:
+
+    1. [ArduinoJson](https://arduinojson.org/)
+    2. HTTPClient
+    3. WiFi
+
+After installing the libraries, you need to connect the ESP32 microcontroller to your computer using a USB cable. After connecting the ESP32 microcontroller
+to your computer, you need to open the `./hardware/FinalOne.ino` file in the Arduino IDE. After opening the file, you need to upload the code to the ESP32 
+microcontroller.
+
+
+
