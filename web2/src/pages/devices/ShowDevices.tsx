@@ -83,23 +83,29 @@ export function TableView(): JSX.Element {
 
 	function fetchDevices(dataIndex: DataIndex | null = null, value: string | number | boolean | null = null, startOver = false) {
 		setLoading(true)
-		apiEndpoint(ENDPOINTS.devices.getDevices + `?limit=${limit}&page=${(startOver ? 1 : page)}` + (dataIndex ? `&${dataIndex}=${value}` : '') + (isActivated && (isActivated === 'true' ? `&isActivated=${true}` : `&isActivated=${false}`)))
-			.get()
-			.then((response) => {
-				return response.data
-			})
-			.then((data) => {
-				console.log(data)
-				setDevices(data.devices)
-				setTotal(data.total)
-			})
-			.catch(error => {
-				console.error(error)
-				messageApi.error("Error while fetching devices")
-			})
-			.finally(() => {
-				setLoading(false)
-			})
+
+		// fetch data from api every 2 seconds
+		const interval = setInterval(() => {
+			apiEndpoint(ENDPOINTS.devices.getDevices + `?limit=${limit}&page=${(startOver ? 1 : page)}` + (dataIndex ? `&${dataIndex}=${value}` : '') + (isActivated && (isActivated === 'true' ? `&isActivated=${true}` : `&isActivated=${false}`)))
+				.get()
+				.then((response) => {
+					return response.data
+				})
+				.then((data) => {
+					console.log(data)
+					setDevices(data.devices)
+					setTotal(data.total)
+				})
+				.catch(error => {
+					console.error(error)
+					messageApi.error("Error while fetching devices")
+				})
+				.finally(() => {
+					setLoading(false)
+				})
+		}, 2000)
+
+		return () => clearInterval(interval)
 	}
 
 	function handleSearch(selectedKeys: string[], confirm: (param?: FilterConfirmProps) => void, dataIndex: DataIndex) {
@@ -262,8 +268,12 @@ export function TableView(): JSX.Element {
 ];
 
 	useEffect(() => {
-		fetchDevices()
+		setLoading(true)
+
+		const clear = fetchDevices()
+
 		return () => {
+			clear()
 			setDevices([])
 		}
 	}, [limit, page, isActivated])
@@ -279,6 +289,7 @@ export function TableView(): JSX.Element {
 				loading={loading}
 				rowKey={(record: any) => record._id}
 				pagination={false}
+				rowClassName={(record: any) => record._id === "648405e7228c8957d910a9ff" ? 'demo_device' : ''}
 			/>
 
 			<Pagination
