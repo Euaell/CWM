@@ -44,6 +44,21 @@ export default class DeviceController {
 		}
 	}
 
+	static async getOne(req: Request, res: Response, next: NextFunction): Promise<Response> {
+		try {
+			const { id } = req.params
+
+			const device: IDevice = await DeviceModel.findById(id)
+			if (!device) {
+				return res.status(404).json({ message: "Device not found" })
+			}
+
+			return res.status(200).json({ device })
+		} catch (error) {
+			next(error)
+		}
+	}
+
 	static async create(req: Request, res: Response, next: NextFunction): Promise<Response> {
 		try {
 			const { Label, City, Address, user } = req.body

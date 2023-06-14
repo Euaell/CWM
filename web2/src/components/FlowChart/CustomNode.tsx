@@ -1,11 +1,27 @@
 import { memo, useState } from "react"
 
 import { Handle, Position, NodeToolbar } from "reactflow"
-import {Button, message, Popover, QRCode} from "antd";
-import {apiEndpoint, ENDPOINTS} from "../../helper/api";
+import { Button, message, Popover, QRCode } from "antd";
+import { apiEndpoint, ENDPOINTS } from "../../helper/api";
 
 const CustomNode = memo((props: any) => {
 	const [data, setData] = useState(props.data)
+
+	function handleClicked() {
+		apiEndpoint(ENDPOINTS.devices.getDeviceByID)
+			.get(props.id)
+			.then((response) => {
+				return response.data.device
+			})
+			.then((device) => {
+				setData({ ...data, label: device.FlowRate, state: device.State })
+			})
+			.catch((error) => {
+				console.log(error)
+				message.destroy()
+				message.error("Something Went Wrong!")
+			})
+	}
 
 	function handleQRCode() {
 		const canvas = document.getElementById(props.id)?.querySelector('canvas') as HTMLCanvasElement
@@ -36,6 +52,7 @@ const CustomNode = memo((props: any) => {
 			style={{ backgroundColor: "lightblue", borderRadius: 8, padding: 10, width: 70 }}
 			onMouseOver={() => setData({...data, toolbarVisible: true})}
 			onMouseLeave={() => setData({...data, toolbarVisible: false})}
+			onClick={handleClicked}
 		>
 			<NodeToolbar
 				isVisible={data.toolbarVisible}
