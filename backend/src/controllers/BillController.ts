@@ -42,7 +42,7 @@ export default class BillController {
 				customer.Volume = 0
 				await customer.save()
 
-				bills.push(bill)
+				bills.push(await bill.populate('Customer', '-__v'))
 			}
 
 			return res.status(201).json({ bills })

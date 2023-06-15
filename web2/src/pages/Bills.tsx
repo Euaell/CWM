@@ -1,6 +1,6 @@
 import React, { JSX, useEffect, useState } from "react";
 import type { ColumnsType } from 'antd/es/table';
-import { Button, DatePicker, InputNumber, message, Pagination, Table, Tag, Typography } from "antd";
+import {Button, DatePicker, Empty, InputNumber, message, Modal, Pagination, Table, Tag, Typography} from "antd";
 import { apiEndpoint, ENDPOINTS } from "../helper/api";
 import BillCharts from "../components/BillCharts.tsx";
 import dayjs from "dayjs";
@@ -23,6 +23,8 @@ export default function Bills(): JSX.Element {
 	const [total, setTotal] = useState(0)
 	const [page, setPage] = useState(1)
 	const [limit, setLimit] = useState(10)
+	const [generatedBills, setGeneratedBills] = useState([])
+	const [isModalOpen, setIsModalOpen] = useState(false)
 
 	function fetchBills(dataIndex: DataIndex | null = null, value: string | number | boolean | null = null, startOver = false) {
 		messageApi.loading("Loading...")
@@ -103,7 +105,9 @@ export default function Bills(): JSX.Element {
 				return response.data;
 			})
 			.then((data) => {
-				messageApi.success(data.bills.length + " Bills generated!", 5)
+				// messageApi.success(data.bills.length + " Bills generated!", 5)
+				setGeneratedBills(data.bills)
+				setIsModalOpen(true)
 			})
 			.catch(error => {
 				console.log(error)
@@ -219,6 +223,87 @@ export default function Bills(): JSX.Element {
 				/>
 
 			</div>
+
+			<GeneratedBIllsModal bills={generatedBills} isOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
 		</div>
+	)
+}
+
+function GeneratedBIllsModal({ bills, isOpen, setIsModalOpen }: { bills: any[], isOpen: boolean, setIsModalOpen: (isOpen: boolean) => void }) {
+
+	const columns : ColumnsType<any> = [
+		{
+			title: "Customer Name",
+			dataIndex: "Customer.Name",
+			key: "Name",
+			render: (_: string, record: any) => record.Customer.Name
+		},
+		{
+			title: "Total Amount",
+			dataIndex: "Amount",
+			key: "Amount"
+		},
+		{
+			title: "Volume",
+			dataIndex: "Volume",
+			key: "Volume"
+		}
+	]
+
+	function exportCSV(data: any[], fileName: string) {
+		const csvData = Papa.unparse(data);
+
+		const file = new Blob([csvData], {type: 'text/csv;charset=utf-8;'})
+		const link = document.createElement("a")
+		if (link.download !== undefined) {
+			const url = URL.createObjectURL(file)
+			link.setAttribute("href", url)
+			link.setAttribute("download", fileName + ".csv")
+			link.style.visibility = 'hidden'
+			document.body.appendChild(link)
+			link.click()
+			document.body.removeChild(link)
+		}
+	}
+
+	async function handleExport() {
+		const data = await Promise.all(bills.map(async (bill) => {
+			return {
+				"Customer Name": bill.Customer.Name,
+				"Customer Phone": bill.Customer.Phone,
+				"Total Amount": bill.Amount,
+				"Volume": bill.Volume
+			}
+		}))
+
+		exportCSV(data, "generated-bills")
+	}
+
+	return (
+		<Modal
+			title="Generated Bills"
+			open={isOpen}
+			onCancel={() => setIsModalOpen(false)}
+			footer={[
+				<Button key="back" onClick={() => setIsModalOpen(false)}>
+					Close
+				</Button>,
+				(bills.length > 0) && (
+					<Button key="submit" type="primary" onClick={handleExport}>
+						Dowload CSV
+					</Button>
+				)
+			]}
+		>
+			{bills.length > 0 ?
+				<Table
+					columns={columns}
+					dataSource={bills}
+					rowKey={(record: any) => record._id}
+					pagination={false}
+				/> :
+				<Empty description={"No bills Generated"} style={{ fontSize: 20 }} />
+			}
+		</Modal>
 	)
 }
