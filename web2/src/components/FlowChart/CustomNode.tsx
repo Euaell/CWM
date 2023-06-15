@@ -47,6 +47,7 @@ const CustomNode = memo((props: any) => {
 				message.error("Something Went Wrong!")
 			})
 	}
+
 	return (
 		<div
 			style={{ backgroundColor: "lightblue", borderRadius: 8, padding: 10, width: 70 }}
@@ -72,7 +73,7 @@ const CustomNode = memo((props: any) => {
 				<Button onClick={handleState}>{data.state}</Button>
 			</NodeToolbar>
 			<Handle type="target" position={Position.Top} />
-			<div style={{ padding: 10, backgroundColor: "red", borderRadius: 5, textAlign: "center" }}>
+			<div style={{ padding: 10, backgroundColor: (data.label == 0 ? "red": "lightgreen"), borderRadius: 5, textAlign: "center" }}>
 				{data.label}
 			</div>
 			<Handle type="source" position={Position.Bottom} />
